@@ -1,0 +1,17 @@
+{
+  "name": "Wait Forever",
+  "id": "fdad630c-a7e7-4af9-a9cc-0c03767b21a9",
+  "type": "waitForever",
+  "meta": {
+    "nodesInfo": [
+      {
+        "id": "fdad630c-a7e7-4af9-a9cc-0c03767b21a9",
+        "position": "1850,187.5"
+      }
+    ],
+    "editorObjects": [],
+    "canvasSize": "3840,2400"
+  },
+  "parameters": [],
+  "locals": {}
+}

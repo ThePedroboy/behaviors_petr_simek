@@ -1,0 +1,10 @@
+{
+  "name": "behaviors_petr_simek",
+  "trees": [
+    "behavior_pedro.bt"
+  ],
+  "initScripts": [],
+  "parameters": {},
+  "capabilities": {},
+  "dynamicTargets": []
+}
