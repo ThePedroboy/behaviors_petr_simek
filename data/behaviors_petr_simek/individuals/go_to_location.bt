@@ -1,0 +1,124 @@
+{
+  "name": "MoveToLoc",
+  "id": "73428412-1644-4b85-8c0d-af3528914844",
+  "type": "selector",
+  "subtrees": [
+    {
+      "name": "<unnamed>",
+      "id": "778df59f-6dad-4eb5-94cb-52ba980a76bb",
+      "type": "sequence",
+      "subtrees": [
+        {
+          "name": "Prone",
+          "id": "57a0818d-3df6-4e24-bec3-6a60ef16a730",
+          "type": "reference",
+          "target": [
+            "behaviors_petr_simek",
+            "stance_prone"
+          ],
+          "arguments": {}
+        },
+        {
+          "name": "SetSpeed",
+          "id": "4828a942-1dee-471e-8251-b240cac12ebd",
+          "type": "setEntitySpeedLimits",
+          "movementSpeed": [
+            "return 10"
+          ]
+        },
+        {
+          "name": "HeadToTarget",
+          "id": "5f17dbee-6b2a-411b-a62e-a33c97e63686",
+          "type": "scriptAction",
+          "script": [
+            "self:ReqHeadingFormationIfStationary()"
+          ]
+        },
+        {
+          "name": "Move",
+          "id": "db271c14-041b-45a7-9ea4-7433c9163e64",
+          "type": "move",
+          "position": [
+            "return bb.position"
+          ]
+        }
+      ],
+      "decorators": [
+        {
+          "id": "9fa153a5-7be5-4291-b427-7f026dd90842",
+          "type": "scriptCondition",
+          "name": "ValidPos",
+          "script": [
+            "return (bb.position ~= nil)"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Succeed",
+      "id": "76606ec1-e9f2-4ad0-86d8-0c2e000ab5eb",
+      "type": "success"
+    }
+  ],
+  "unlinked-trees": [
+    {
+      "name": "<unnamed>",
+      "id": "26c2f532-3f16-44ac-985d-0a909c7c948b",
+      "type": "valueComparison",
+      "meta": {
+        "nodesInfo": [
+          {
+            "id": "26c2f532-3f16-44ac-985d-0a909c7c948b",
+            "position": "1493.6,246.4"
+          }
+        ],
+        "editorObjects": []
+      },
+      "operator": "=",
+      "lhs": {
+        "type": "nil"
+      },
+      "rhs": {
+        "type": "nil"
+      }
+    }
+  ],
+  "meta": {
+    "nodesInfo": [
+      {
+        "id": "73428412-1644-4b85-8c0d-af3528914844",
+        "position": "1812.5,91.1"
+      },
+      {
+        "id": "778df59f-6dad-4eb5-94cb-52ba980a76bb",
+        "position": "1675,228.6"
+      },
+      {
+        "id": "57a0818d-3df6-4e24-bec3-6a60ef16a730",
+        "position": "1337.5,416.1"
+      },
+      {
+        "id": "4828a942-1dee-471e-8251-b240cac12ebd",
+        "position": "1537.5,428.6"
+      },
+      {
+        "id": "5f17dbee-6b2a-411b-a62e-a33c97e63686",
+        "position": "1725,428.6"
+      },
+      {
+        "id": "db271c14-041b-45a7-9ea4-7433c9163e64",
+        "position": "1900,428.6"
+      },
+      {
+        "id": "76606ec1-e9f2-4ad0-86d8-0c2e000ab5eb",
+        "position": "1975,303.6"
+      }
+    ],
+    "editorObjects": [],
+    "canvasSize": "3840,2453.6",
+    "gridPadding": "0,3.60000000000002"
+  },
+  "active": true,
+  "parameters": [],
+  "locals": {}
+}

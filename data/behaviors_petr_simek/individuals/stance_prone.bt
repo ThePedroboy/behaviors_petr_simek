@@ -1,0 +1,32 @@
+{
+  "name": "ChangeStance",
+  "id": "97adf889-ac61-4db1-b93f-988acd0df4e0",
+  "type": "sequence",
+  "subtrees": [
+    {
+      "name": "Prone",
+      "id": "2b6c1fdb-475f-490d-91e4-f20baf1a8bc6",
+      "type": "setStance",
+      "stance": [
+        "return Stance.Prone"
+      ]
+    }
+  ],
+  "meta": {
+    "nodesInfo": [
+      {
+        "id": "97adf889-ac61-4db1-b93f-988acd0df4e0",
+        "position": "1750,203"
+      },
+      {
+        "id": "2b6c1fdb-475f-490d-91e4-f20baf1a8bc6",
+        "position": "1750,315.5"
+      }
+    ],
+    "editorObjects": [],
+    "canvasSize": "3840,2428",
+    "gridPadding": "0,3"
+  },
+  "parameters": [],
+  "locals": {}
+}

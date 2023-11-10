@@ -1,44 +1,164 @@
 {
   "name": "<unnamed>",
-  "id": "0bd4a2ad-6c1e-4f3b-aa9e-f7dfecd3f95b",
-  "type": "supervisedParallel",
+  "id": "daeccf1a-253f-4468-8219-ac174ab4a9fb",
+  "type": "selector",
   "subtrees": [
     {
       "name": "<unnamed>",
-      "id": "e7c77ec3-fef1-4886-9dfb-f411464c122c",
-      "type": "sequence",
+      "id": "d6184166-9b88-403f-add3-0c82371d1b95",
+      "type": "supervisedParallel",
       "subtrees": [
         {
-          "name": "SavePos",
-          "id": "97c1b1ee-750d-4055-8999-d98be9fcfae3",
+          "name": "DrawPath",
+          "id": "44ad7f65-ab69-4864-a0fb-f46f9506b98d",
+          "type": "sequence",
+          "subtrees": [
+            {
+              "name": "SavePos",
+              "id": "b5eba504-9cf2-46d9-985b-965d0f55d264",
+              "type": "scriptAction",
+              "script": [
+                "loc.position = self:GetEntity(0):GetPosition()"
+              ]
+            },
+            {
+              "name": "FindPath",
+              "id": "020f8a7c-fdc5-4a8d-9326-66eae43f849c",
+              "type": "scriptAction",
+              "script": [
+                "loc.path_query = FindPath(",
+                "    loc.position,",
+                "    bb.position",
+                ")"
+              ]
+            },
+            {
+              "name": "Wait",
+              "id": "a04d2dda-cbde-4078-93ad-559d22b03bdd",
+              "type": "waitUntil",
+              "condition": [
+                "local rdy = loc.path_query:IsReady()",
+                "if rdy then",
+                "loc.path = loc.path_query:Value()",
+                "loc.path_query = nil",
+                "end",
+                "return rdy"
+              ]
+            },
+            {
+              "name": "Wait Forever",
+              "id": "c98a9c98-edd8-4dd8-b9f2-44fe80ae02d1",
+              "type": "waitForever"
+            }
+          ]
+        },
+        {
+          "name": "Draw",
+          "id": "e377099a-85fc-406d-8745-332b990368eb",
           "type": "scriptAction",
           "script": [
-            "loc.position = self:GetEntity(0):GetPosition()"
+            "local function get_points(path)",
+            "    local segmentCount = path:GetSegmentCount()",
+            "    local points = {}",
+            "",
+            "    for i = 0, segmentCount-1 do",
+            "\t    points[i+1] = path:GetSegmentStart(i)",
+            "    end",
+            "",
+            "    points[#points+1] = path:GetSegmentEnd(segmentCount-1)",
+            "    return points",
+            "end",
+            "",
+            "local function polylineOnSurface(points,r, g, b, a, offset)",
+            "    for i = 1, #points do",
+            "\t    points[i] = GetSurfacePosition(points[i]) + offset",
+            "    end",
+            "    for i = 1, #points-1 do",
+            "        DebugLine(points[i], points[i+1], r, g, b, a)",
+            "    end            ",
+            "end",
+            "",
+            "if not (loc.path == nil) then",
+            "    local my_path = loc.path",
+            "    local points = get_points(my_path)",
+            "    polylineOnSurface(points, 0, 0, 1, 1, Vec3(0,0,1))",
+            "",
+            "    ",
+            "end",
+            "DebugLine(bb.position, bb.position + Vec3(0, 0, 3), 0, 1, 0)"
           ]
-        }
-      ],
-      "decorators": [
-        {
-          "id": "b9efb469-c449-4e3f-926d-e4b2949ba505",
-          "type": "loopForever",
-          "name": "<unnamed>"
         }
       ]
     },
     {
-      "name": "Debug",
-      "id": "19845ff4-714b-499b-a045-7ed5d9c5406e",
-      "type": "scriptAction",
-      "script": [
-        "DebugLine(",
-        "    loc.position, ",
-        "    loc.position + Vec3(0, 0, 5), ",
-        "    1, 0, 1, 1",
-        ")"
-      ]
+      "name": "Wait Forever",
+      "id": "2263196a-eae7-4b23-beff-ebc5f24173ba",
+      "type": "waitForever"
     }
   ],
   "unlinked-trees": [
+    {
+      "name": "<unnamed>",
+      "id": "0bd4a2ad-6c1e-4f3b-aa9e-f7dfecd3f95b",
+      "type": "supervisedParallel",
+      "subtrees": [
+        {
+          "name": "<unnamed>",
+          "id": "e7c77ec3-fef1-4886-9dfb-f411464c122c",
+          "type": "sequence",
+          "subtrees": [
+            {
+              "name": "SavePos",
+              "id": "97c1b1ee-750d-4055-8999-d98be9fcfae3",
+              "type": "scriptAction",
+              "script": [
+                "loc.position = self:GetEntity(0):GetPosition()"
+              ]
+            }
+          ],
+          "decorators": [
+            {
+              "id": "b9efb469-c449-4e3f-926d-e4b2949ba505",
+              "type": "loopForever",
+              "name": "<unnamed>"
+            }
+          ]
+        },
+        {
+          "name": "Debug",
+          "id": "19845ff4-714b-499b-a045-7ed5d9c5406e",
+          "type": "scriptAction",
+          "script": [
+            "DebugLine(",
+            "    loc.position, ",
+            "    loc.position + Vec3(0, 0, 5), ",
+            "    1, 0, 1, 1",
+            ")"
+          ]
+        }
+      ],
+      "meta": {
+        "nodesInfo": [
+          {
+            "id": "0bd4a2ad-6c1e-4f3b-aa9e-f7dfecd3f95b",
+            "position": "2375,665.115555555556"
+          },
+          {
+            "id": "e7c77ec3-fef1-4886-9dfb-f411464c122c",
+            "position": "2375,852.615555555555"
+          },
+          {
+            "id": "97c1b1ee-750d-4055-8999-d98be9fcfae3",
+            "position": "2187.5,977.615555555556"
+          },
+          {
+            "id": "19845ff4-714b-499b-a045-7ed5d9c5406e",
+            "position": "2725,802.615555555556"
+          }
+        ],
+        "editorObjects": []
+      }
+    },
     {
       "name": "Wait Forever",
       "id": "fdad630c-a7e7-4af9-a9cc-0c03767b21a9",
@@ -47,7 +167,7 @@
         "nodesInfo": [
           {
             "id": "fdad630c-a7e7-4af9-a9cc-0c03767b21a9",
-            "position": "2550,522.177777777778"
+            "position": "2550,977.615555555556"
           }
         ],
         "editorObjects": []
@@ -61,7 +181,7 @@
         "nodesInfo": [
           {
             "id": "8338d46a-e4b6-455c-9031-d3421a0bbc35",
-            "position": "1912.5,359.677777777778"
+            "position": "1787.5,827.615555555555"
           }
         ],
         "editorObjects": []
@@ -78,7 +198,7 @@
         "nodesInfo": [
           {
             "id": "642536bb-2e87-478e-b5c7-7db9f2757a20",
-            "position": "1925,434.677777777778"
+            "position": "1800,902.615555555555"
           }
         ],
         "editorObjects": []
@@ -95,7 +215,7 @@
         "nodesInfo": [
           {
             "id": "ae052c0c-0773-48c3-9539-6356f4d5da98",
-            "position": "2375,522.177777777778"
+            "position": "2375,977.615555555556"
           }
         ],
         "editorObjects": []
@@ -103,33 +223,95 @@
       "time": [
         "10"
       ]
+    },
+    {
+      "name": "Wait Forever",
+      "id": "aa480f50-7e9b-4e94-a350-dd66c1675299",
+      "type": "waitForever",
+      "meta": {
+        "nodesInfo": [
+          {
+            "id": "aa480f50-7e9b-4e94-a350-dd66c1675299",
+            "position": "3187.5,790.115555555556"
+          }
+        ],
+        "editorObjects": []
+      }
+    },
+    {
+      "name": "<unnamed>",
+      "id": "dd25a304-d45c-45ad-9ec0-ab01a16f8b62",
+      "type": "sequence",
+      "subtrees": [
+        {
+          "name": "Wait Forever",
+          "id": "53cbc074-7bd2-43eb-8d52-97de197afd5a",
+          "type": "waitForever"
+        }
+      ],
+      "meta": {
+        "nodesInfo": [
+          {
+            "id": "dd25a304-d45c-45ad-9ec0-ab01a16f8b62",
+            "position": "3725,452.615555555556"
+          },
+          {
+            "id": "53cbc074-7bd2-43eb-8d52-97de197afd5a",
+            "position": "3862.5,552.615555555556"
+          }
+        ],
+        "editorObjects": []
+      }
     }
   ],
   "meta": {
     "nodesInfo": [
       {
-        "id": "0bd4a2ad-6c1e-4f3b-aa9e-f7dfecd3f95b",
-        "position": "2375,209.677777777778"
+        "id": "daeccf1a-253f-4468-8219-ac174ab4a9fb",
+        "position": "3550,165.115555555556"
       },
       {
-        "id": "e7c77ec3-fef1-4886-9dfb-f411464c122c",
-        "position": "2375,397.177777777778"
+        "id": "d6184166-9b88-403f-add3-0c82371d1b95",
+        "position": "3437.5,315.115555555556"
       },
       {
-        "id": "97c1b1ee-750d-4055-8999-d98be9fcfae3",
-        "position": "2187.5,522.177777777778"
+        "id": "44ad7f65-ab69-4864-a0fb-f46f9506b98d",
+        "position": "3287.5,515.115555555556"
       },
       {
-        "id": "19845ff4-714b-499b-a045-7ed5d9c5406e",
-        "position": "2837.5,334.677777777778"
+        "id": "b5eba504-9cf2-46d9-985b-965d0f55d264",
+        "position": "3100,652.615555555556"
+      },
+      {
+        "id": "020f8a7c-fdc5-4a8d-9326-66eae43f849c",
+        "position": "3287.5,652.615555555556"
+      },
+      {
+        "id": "a04d2dda-cbde-4078-93ad-559d22b03bdd",
+        "position": "3487.5,652.615555555556"
+      },
+      {
+        "id": "c98a9c98-edd8-4dd8-b9f2-44fe80ae02d1",
+        "position": "3687.5,652.615555555556"
+      },
+      {
+        "id": "e377099a-85fc-406d-8745-332b990368eb",
+        "position": "3675,552.615555555556"
+      },
+      {
+        "id": "2263196a-eae7-4b23-beff-ebc5f24173ba",
+        "position": "3650,315.115555555556"
       }
     ],
     "editorObjects": [],
-    "canvasSize": "3840,2472.17777777778",
-    "gridPadding": "0,9.67777777777778"
+    "canvasSize": "4390.77286883299,2927.61555555556",
+    "gridPadding": "0,2.61555555555563"
   },
+  "active": false,
   "parameters": [],
   "locals": {
-    "position": "return nil"
+    "position": "return nil",
+    "path_query": "return nil",
+    "path": "return nil"
   }
 }

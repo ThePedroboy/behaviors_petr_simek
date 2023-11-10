@@ -1,0 +1,115 @@
+{
+  "name": "FireAtRnd",
+  "id": "953089e2-87ec-4f86-936e-e01d997b7768",
+  "type": "sequence",
+  "subtrees": [
+    {
+      "name": "FindTarget",
+      "id": "95423d47-33fe-44bc-b5ca-3fa0c2ed82f3",
+      "type": "scriptAction",
+      "script": [
+        "for i, entity in ipairs( ",
+        "    GetEntitiesInArea( ",
+        "        Circle(",
+        "            self:GetPosition(), ",
+        "            50",
+        "        ), ",
+        "        { ",
+        "            enemyOf = self ",
+        "        }",
+        "    ) ",
+        ") ",
+        "do",
+        "    loc.target = entity",
+        "    break",
+        "end"
+      ]
+    },
+    {
+      "name": "<unnamed>",
+      "id": "44ccec6a-4c47-4f13-ab3c-235cc617df14",
+      "type": "selector",
+      "subtrees": [
+        {
+          "name": "<unnamed>",
+          "id": "5f132888-bc95-4732-9abe-032ab01e612d",
+          "type": "sequence",
+          "subtrees": [
+            {
+              "name": "Aim",
+              "id": "6afcaeb7-6a30-4136-a356-8be2217aafe6",
+              "type": "scriptAction",
+              "script": [
+                "self:ReqHeadingAimAtEntity(loc.target)"
+              ]
+            },
+            {
+              "name": "Fire",
+              "id": "82dec8d3-006a-4282-b734-ff340ef15500",
+              "type": "fire",
+              "rounds": [
+                "5"
+              ],
+              "forced": false
+            }
+          ],
+          "decorators": [
+            {
+              "id": "ac1ce292-d0fb-4999-b127-b535d7f356bb",
+              "type": "scriptCondition",
+              "name": "GotTarget",
+              "script": [
+                "return (loc.target ~= nil)"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Succeed",
+          "id": "31f85aea-3935-468e-ac9c-4dccdc378352",
+          "type": "success"
+        }
+      ],
+      "active": true
+    }
+  ],
+  "meta": {
+    "nodesInfo": [
+      {
+        "id": "953089e2-87ec-4f86-936e-e01d997b7768",
+        "position": "1987.5,103.6"
+      },
+      {
+        "id": "95423d47-33fe-44bc-b5ca-3fa0c2ed82f3",
+        "position": "1712.5,416.1"
+      },
+      {
+        "id": "44ccec6a-4c47-4f13-ab3c-235cc617df14",
+        "position": "2137.5,266.1"
+      },
+      {
+        "id": "5f132888-bc95-4732-9abe-032ab01e612d",
+        "position": "2050,416.1"
+      },
+      {
+        "id": "6afcaeb7-6a30-4136-a356-8be2217aafe6",
+        "position": "1937.5,603.6"
+      },
+      {
+        "id": "82dec8d3-006a-4282-b734-ff340ef15500",
+        "position": "2125,603.6"
+      },
+      {
+        "id": "31f85aea-3935-468e-ac9c-4dccdc378352",
+        "position": "2325,416.1"
+      }
+    ],
+    "editorObjects": [],
+    "canvasSize": "3840,2553.6",
+    "gridPadding": "0,3.59999999999994"
+  },
+  "parameters": [],
+  "locals": {
+    "target": "return nil"
+  }
+}
