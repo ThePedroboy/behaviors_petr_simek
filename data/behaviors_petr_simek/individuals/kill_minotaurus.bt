@@ -1,0 +1,327 @@
+{
+  "name": "<unnamed>",
+  "id": "68726d8a-c43a-40ae-8da6-0b0dbfad5549",
+  "type": "supervisedParallel",
+  "subtrees": [
+    {
+      "name": "Find and Go",
+      "id": "221b8a14-dbbc-4791-940c-896bfc63e710",
+      "type": "sequence",
+      "subtrees": [
+        {
+          "name": "FindTarget",
+          "id": "f218a149-5265-44f4-a5db-860d95955621",
+          "type": "scriptAction",
+          "script": [
+            "for i, entity in ipairs( ",
+            "    GetEntitiesInArea( ",
+            "        Circle(",
+            "            self:GetPosition(), ",
+            "            10000",
+            "        ), ",
+            "        { ",
+            "            enemyOf = self ",
+            "        }",
+            "    ) ",
+            ") ",
+            "do",
+            "    loc.target = entity",
+            "    break",
+            "end"
+          ]
+        },
+        {
+          "name": "<unnamed>",
+          "id": "84da0c30-299b-4bbe-b8e7-3e0287da44bd",
+          "type": "sequence",
+          "subtrees": [
+            {
+              "name": "GetPos",
+              "id": "6fc42b9b-7ea0-485c-8d1b-5a81ffa9922a",
+              "type": "scriptAction",
+              "script": [
+                "loc.target_pos = loc.target:GetPosition()"
+              ]
+            },
+            {
+              "name": "Distance",
+              "id": "3d7bb17a-8696-483b-ba99-26a0d21fb890",
+              "type": "scriptAction",
+              "script": [
+                "local my_pos = self:GetPosition()",
+                "local tar = loc.target_pos",
+                "local d = my_pos:Distance(tar)",
+                "loc.dist = d"
+              ]
+            }
+          ],
+          "decorators": [
+            {
+              "id": "3419f703-1169-4757-a6b4-a893b63b43d2",
+              "type": "scriptCondition",
+              "name": "ValidTarget",
+              "script": [
+                "return (loc.target ~= nil)"
+              ]
+            }
+          ]
+        }
+      ],
+      "decorators": [
+        {
+          "id": "5381fd3b-f821-415b-aa6f-053a2fd44d74",
+          "type": "loopForever",
+          "name": "<unnamed>"
+        }
+      ]
+    },
+    {
+      "name": "MoveOut",
+      "id": "cee35b42-2c16-4986-a963-095169830f4c",
+      "type": "selector",
+      "subtrees": [
+        {
+          "name": "GoKill",
+          "id": "d98bb035-35e2-425d-ad68-d714fb8a563b",
+          "type": "sequence",
+          "subtrees": [
+            {
+              "name": "Fire",
+              "id": "d5a7847b-96bb-40a1-8f5b-03039b7e9f0e",
+              "type": "reference",
+              "target": [
+                "behaviors_petr_simek",
+                "fire_at_nearest"
+              ],
+              "arguments": {}
+            }
+          ],
+          "decorators": [
+            {
+              "id": "fcb7f8b3-1216-4bd2-85c9-9f18238073e6",
+              "type": "scriptCondition",
+              "name": "Visible",
+              "script": [
+                "return (self:IsClearSightTo(loc.target_pos) and loc.dist < 15)"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Move",
+          "id": "55644c70-8454-436d-86c7-cd2afa7a4060",
+          "type": "sequence",
+          "subtrees": [
+            {
+              "name": "SetSpeed",
+              "id": "3039bd5f-633b-4439-982e-9bbf19404236",
+              "type": "setEntitySpeedLimits",
+              "movementSpeed": [
+                "return 10"
+              ]
+            },
+            {
+              "name": "HeadToTarget",
+              "id": "c7e80da7-19b5-4d35-a898-44f76b410f4d",
+              "type": "scriptAction",
+              "script": [
+                "self:ReqHeadingFormationIfStationary()"
+              ]
+            },
+            {
+              "name": "Follow Entity",
+              "id": "1e1b8cb2-1b27-406a-beff-08d79dcc4afb",
+              "type": "followEntity",
+              "entity": [
+                "return loc.target"
+              ],
+              "distance": [
+                "10"
+              ]
+            }
+          ],
+          "decorators": [
+            {
+              "id": "bfd79a9c-e393-4e2b-8cbf-d0e20fbdd15d",
+              "type": "scriptCondition",
+              "name": "ValidPos",
+              "script": [
+                "return (loc.target_pos ~= nil)"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Succeed",
+          "id": "d75dbaf6-5c10-4ca9-b60c-8888b2b20bfa",
+          "type": "success"
+        }
+      ],
+      "active": true
+    }
+  ],
+  "unlinked-trees": [
+    {
+      "name": "ChangeStance",
+      "id": "7e90c974-5ae1-40ae-a503-d5a4b308125a",
+      "type": "sequence",
+      "subtrees": [
+        {
+          "name": "Prone",
+          "id": "5aa71615-bb4d-42ce-98cf-769be1bfcc96",
+          "type": "setStance",
+          "stance": [
+            "return Stance.Prone"
+          ]
+        },
+        {
+          "name": "Stand",
+          "id": "2ee75d65-1d94-412f-8d22-3956cf093d34",
+          "type": "setStance",
+          "stance": [
+            "return Stance.Standing"
+          ]
+        },
+        {
+          "name": "<unnamed>",
+          "id": "f961c044-db83-4509-a4c8-d09c75231d0b",
+          "type": "wait",
+          "time": [
+            "1"
+          ]
+        }
+      ],
+      "meta": {
+        "nodesInfo": [
+          {
+            "id": "7e90c974-5ae1-40ae-a503-d5a4b308125a",
+            "position": "2312.5,470.4"
+          },
+          {
+            "id": "5aa71615-bb4d-42ce-98cf-769be1bfcc96",
+            "position": "2150,582.9"
+          },
+          {
+            "id": "2ee75d65-1d94-412f-8d22-3956cf093d34",
+            "position": "2312.5,582.9"
+          },
+          {
+            "id": "f961c044-db83-4509-a4c8-d09c75231d0b",
+            "position": "2487.5,582.9"
+          }
+        ],
+        "editorObjects": []
+      }
+    },
+    {
+      "name": "<unnamed>",
+      "id": "75c0e345-3f2b-4d58-ac77-6bed3009828b",
+      "type": "sequence",
+      "subtrees": [
+        {
+          "name": "<unnamed>",
+          "id": "a4e3d127-db4c-466f-8694-72dc195ded9b",
+          "type": "scriptAction",
+          "script": [
+            "loc.curr_target = loc.target_pos"
+          ]
+        },
+        {
+          "name": "Move",
+          "id": "68f483e3-9b2b-4c55-a998-6c3634bf52a9",
+          "type": "move",
+          "position": [
+            "return loc.target_pos"
+          ]
+        }
+      ],
+      "meta": {
+        "nodesInfo": [
+          {
+            "id": "75c0e345-3f2b-4d58-ac77-6bed3009828b",
+            "position": "1975,920.4"
+          },
+          {
+            "id": "a4e3d127-db4c-466f-8694-72dc195ded9b",
+            "position": "1875,1032.9"
+          },
+          {
+            "id": "68f483e3-9b2b-4c55-a998-6c3634bf52a9",
+            "position": "2037.5,1032.9"
+          }
+        ],
+        "editorObjects": []
+      }
+    }
+  ],
+  "meta": {
+    "nodesInfo": [
+      {
+        "id": "68726d8a-c43a-40ae-8da6-0b0dbfad5549",
+        "position": "1350,307.9"
+      },
+      {
+        "id": "221b8a14-dbbc-4791-940c-896bfc63e710",
+        "position": "1075,570.4"
+      },
+      {
+        "id": "f218a149-5265-44f4-a5db-860d95955621",
+        "position": "899.3,707.9"
+      },
+      {
+        "id": "84da0c30-299b-4bbe-b8e7-3e0287da44bd",
+        "position": "1087.5,707.9"
+      },
+      {
+        "id": "6fc42b9b-7ea0-485c-8d1b-5a81ffa9922a",
+        "position": "975,870.4"
+      },
+      {
+        "id": "3d7bb17a-8696-483b-ba99-26a0d21fb890",
+        "position": "1137.5,870.4"
+      },
+      {
+        "id": "cee35b42-2c16-4986-a963-095169830f4c",
+        "position": "1587.5,532.9"
+      },
+      {
+        "id": "d98bb035-35e2-425d-ad68-d714fb8a563b",
+        "position": "1362.5,820.4"
+      },
+      {
+        "id": "d5a7847b-96bb-40a1-8f5b-03039b7e9f0e",
+        "position": "1362.5,1045.4"
+      },
+      {
+        "id": "55644c70-8454-436d-86c7-cd2afa7a4060",
+        "position": "1900,757.9"
+      },
+      {
+        "id": "3039bd5f-633b-4439-982e-9bbf19404236",
+        "position": "1587.5,920.4"
+      },
+      {
+        "id": "c7e80da7-19b5-4d35-a898-44f76b410f4d",
+        "position": "1762.5,920.4"
+      },
+      {
+        "id": "1e1b8cb2-1b27-406a-beff-08d79dcc4afb",
+        "position": "2162.5,920.4"
+      },
+      {
+        "id": "d75dbaf6-5c10-4ca9-b60c-8888b2b20bfa",
+        "position": "2212.5,720.4"
+      }
+    ],
+    "editorObjects": [],
+    "canvasSize": "3840,2670.4",
+    "gridPadding": "0,7.89999999999998"
+  },
+  "parameters": [],
+  "locals": {
+    "target": "return nil",
+    "target_pos": "return nil",
+    "curr_target": "return nil",
+    "dist": "return nil"
+  }
+}
