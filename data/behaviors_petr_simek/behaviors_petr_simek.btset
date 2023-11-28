@@ -4,6 +4,7 @@
     "individuals\\fire_at_nearest.bt",
     "individuals\\go_to_location.bt",
     "individuals\\kill_minotaurus.bt",
+    "individuals\\kill_mino_bonus.bt",
     "individuals\\stance_prone.bt",
     "behavior_pedro.bt"
   ],

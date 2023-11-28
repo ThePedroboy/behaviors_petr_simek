@@ -81,11 +81,8 @@
             "if not (loc.path == nil) then",
             "    local my_path = loc.path",
             "    local points = get_points(my_path)",
-            "    polylineOnSurface(points, 0, 0, 1, 1, Vec3(0,0,1))",
-            "",
-            "    ",
-            "end",
-            "DebugLine(bb.position, bb.position + Vec3(0, 0, 3), 0, 1, 0)"
+            "    polylineOnSurface(points, 0, 0, 1, 1, Vec3(0,0,1))    ",
+            "end"
           ]
         }
       ]
