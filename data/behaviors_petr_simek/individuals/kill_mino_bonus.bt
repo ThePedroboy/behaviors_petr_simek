@@ -1,16 +1,16 @@
 {
   "name": "<unnamed>",
-  "id": "6980f8b8-1513-4189-b898-aa91e5fbe076",
+  "id": "6c3e0e0c-5dce-4a34-8fa2-5d6dd3eb333d",
   "type": "supervisedParallel",
   "subtrees": [
     {
-      "name": "Find minotaur",
-      "id": "8bebcf14-03ca-4dbf-87c3-e7811c57451e",
+      "name": "GetData",
+      "id": "99a332ab-704e-4d4b-ad67-c697de72ea18",
       "type": "sequence",
       "subtrees": [
         {
           "name": "FindTarget",
-          "id": "1081edb0-990c-4e35-b670-a294d141822d",
+          "id": "d2c348ab-d775-40e1-a228-eac7e6791796",
           "type": "scriptAction",
           "script": [
             "for i, entity in ipairs( ",
@@ -32,15 +32,15 @@
         },
         {
           "name": "GetPos",
-          "id": "3fa7ac38-ce74-4f0b-9784-2bdfaf0ecfc5",
+          "id": "39319d66-c363-4d71-bba7-24a330b7d413",
           "type": "scriptAction",
           "script": [
             "loc.target_pos = loc.target:GetPosition()"
           ]
         },
         {
-          "name": "Distance",
-          "id": "911412f4-56fb-4535-85b6-f75efedadc87",
+          "name": "GetDistance",
+          "id": "1f9501a2-8c5d-459b-aea9-be5ed4830673",
           "type": "scriptAction",
           "script": [
             "local my_pos = self:GetPosition()",
@@ -48,32 +48,10 @@
             "local d = my_pos:Distance(tar)",
             "loc.dist = d"
           ]
-        }
-      ],
-      "decorators": [
-        {
-          "id": "0cfb3f03-53a2-410d-8731-1f0239b69d07",
-          "type": "loopForever",
-          "name": "Loop"
-        }
-      ]
-    },
-    {
-      "name": "Find Path",
-      "id": "6c4bfe10-1817-4133-8496-04dc6d103259",
-      "type": "sequence",
-      "subtrees": [
-        {
-          "name": "WaitForPos",
-          "id": "0cc92195-0186-4d26-86f5-7fc94aebb3e0",
-          "type": "waitUntil",
-          "condition": [
-            "return (loc.target_pos ~= nil)"
-          ]
         },
         {
           "name": "FindPath",
-          "id": "9f9ef4ac-0346-4e73-9a12-465065f6563d",
+          "id": "89b34532-1ee8-4f01-8c0c-9f8d0c57e8a7",
           "type": "scriptAction",
           "script": [
             "local my_pos = self:GetPosition()",
@@ -85,41 +63,99 @@
         },
         {
           "name": "Wait",
-          "id": "e8d54932-8675-4d37-a444-a0e6dead85b2",
+          "id": "9dc5644a-f0c6-47e7-a368-b0a2ba84184e",
           "type": "waitUntil",
           "condition": [
             "local rdy = loc.path_query:IsReady()",
             "if rdy then",
             "loc.path = loc.path_query:Value()",
-            "loc.segs_count = loc.path:GetSegmentCount()",
-            "--loc.curr_seg = 0",
             "end",
             "return rdy"
           ]
         },
         {
-          "name": "Wait1",
-          "id": "7c5597db-6f1c-4a56-aa83-5d9801459076",
-          "type": "wait",
-          "time": [
-            "1"
+          "name": "CalculateAngle",
+          "id": "03ede8e4-ff0a-4cbd-bbb0-c5c09a78e62d",
+          "type": "scriptAction",
+          "script": [
+            "if loc.stop == 0 then",
+            "    local dir = loc.path:DirectionAlongPath(1)",
+            "    local turn = MathExt.AngleDiff(dir, self:GetHeading())",
+            "    local angle = math.abs(turn)",
+            "    if angle > 70 then",
+            "        loc.stop = 1",
+            "    end",
+            "end"
           ]
+        },
+        {
+          "name": "Safe stop reset",
+          "id": "802ab9a5-aaf4-4f90-b909-be744581139c",
+          "type": "selector",
+          "subtrees": [
+            {
+              "name": "<unnamed>",
+              "id": "d6f0b7a1-3436-46c4-9308-848452f200c0",
+              "type": "sequence",
+              "subtrees": [
+                {
+                  "name": "Wait 1",
+                  "id": "0a6c64e6-9a50-40da-94a4-d7604bf18a1d",
+                  "type": "wait",
+                  "time": [
+                    "1"
+                  ]
+                },
+                {
+                  "name": "Reset",
+                  "id": "9ac77665-7269-4729-85bc-7cc28648e752",
+                  "type": "scriptAction",
+                  "script": [
+                    "loc.stop = 0"
+                  ]
+                }
+              ],
+              "decorators": [
+                {
+                  "id": "3b7e2407-c098-42ed-80bb-af4ce3f5d6ea",
+                  "type": "scriptCondition",
+                  "name": "<unnamed>",
+                  "script": [
+                    "return loc.stop == 2"
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Succeed",
+              "id": "46c4d711-df70-4552-8725-efb8e7849953",
+              "type": "success"
+            }
+          ],
+          "active": true
+        }
+      ],
+      "decorators": [
+        {
+          "id": "36badd38-08d2-492e-a8d1-a8c49977b232",
+          "type": "loopForever",
+          "name": "<unnamed>"
         }
       ]
     },
     {
-      "name": "MoveOut",
-      "id": "7072c65f-7223-4c3e-a747-c88aad4df989",
+      "name": "Movement",
+      "id": "4df8d561-fe7b-403f-be2f-3c14eaf0db03",
       "type": "selector",
       "subtrees": [
         {
           "name": "GoKill",
-          "id": "df1cae78-67fb-41e2-9a63-690abe93b06b",
+          "id": "6117d181-773c-4ecc-8eb7-68570738763b",
           "type": "sequence",
           "subtrees": [
             {
               "name": "Fire",
-              "id": "d1b5011e-8266-42d1-a275-499f3d754569",
+              "id": "3f37bb71-e7c7-4dd3-98ea-010b5c551b53",
               "type": "reference",
               "target": [
                 "behaviors_petr_simek",
@@ -130,7 +166,7 @@
           ],
           "decorators": [
             {
-              "id": "2b9af139-4ca9-4950-a454-f3d2cb833b9c",
+              "id": "ccec7f44-082a-4729-b68d-d0faf0a96aad",
               "type": "scriptCondition",
               "name": "Enemy contact",
               "script": [
@@ -140,114 +176,93 @@
           ]
         },
         {
-          "name": "Move",
-          "id": "99cd5ac4-376f-4f4f-b21a-65573f39d64b",
+          "name": "<unnamed>",
+          "id": "14c8e230-f003-42d7-b526-a7819713527f",
           "type": "sequence",
           "subtrees": [
             {
-              "name": "WaitForPath",
-              "id": "11087a27-d70a-4e3c-b33c-2903375c273e",
-              "type": "waitUntil",
-              "condition": [
-                "return (loc.path ~= nil)"
-              ]
-            },
-            {
               "name": "SetSpeed",
-              "id": "7e37ead2-5c78-463b-82da-03cbf800b9ac",
+              "id": "7a045159-2335-418f-a2d6-2d4fcc459b22",
               "type": "setEntitySpeedLimits",
               "movementSpeed": [
-                "return 10"
+                "return 3"
               ]
             },
             {
               "name": "HeadToTarget",
-              "id": "d8a40a9f-7bea-4f44-82f8-83a26eaa918a",
+              "id": "c6ff79eb-50d5-4977-a97b-7c030f8f4cea",
               "type": "scriptAction",
               "script": [
                 "self:ReqHeadingFormationIfStationary()"
               ]
             },
             {
-              "name": "CalculateAngle",
-              "id": "4e3fd2bc-e92e-4e1e-935e-06d06fe1f33e",
-              "type": "scriptAction",
-              "script": [
-                "local point_me = self:GetPosition()",
-                "local point1 = loc.path:GetSegmentEnd(0)",
-                "local point2 = loc.path:GetSegmentEnd(1)",
-                "",
-                "local va = point1 - point_me",
-                "local vb = point2 - point_me",
-                "local angle = va:AngleTo(vb)",
-                "loc.ang = angle"
-              ]
-            },
-            {
               "name": "Move",
-              "id": "84728e36-df71-479e-972f-3ae68772b8db",
+              "id": "46234754-a391-42de-b3b1-dcfccf2573e0",
               "type": "move",
               "position": [
-                "return loc.path:GetSegmentEnd(0)"
+                "return loc.target_pos"
               ]
-            },
+            }
+          ],
+          "decorators": [
             {
-              "name": "<unnamed>",
-              "id": "e7bfc315-410e-4fb0-9cb7-ce11c4421bff",
-              "type": "selector",
-              "subtrees": [
-                {
-                  "name": "ChangeStance",
-                  "id": "3ab6b6e3-4834-4f09-a572-2de11caebc95",
-                  "type": "sequence",
-                  "subtrees": [
-                    {
-                      "name": "Prone",
-                      "id": "8db6eb30-dda4-4161-8149-c3c3fa785eb9",
-                      "type": "setStance",
-                      "stance": [
-                        "return Stance.Prone"
-                      ]
-                    },
-                    {
-                      "name": "Stand",
-                      "id": "d5f0cb17-72c5-4cdd-bd4f-6c5f51dab29a",
-                      "type": "setStance",
-                      "stance": [
-                        "return Stance.Standing"
-                      ]
-                    }
-                  ],
-                  "decorators": [
-                    {
-                      "id": "1de2abee-63d7-4e97-af47-e542ca09b57b",
-                      "type": "scriptCondition",
-                      "name": "70+ angle ?",
-                      "script": [
-                        "local angle = loc.ang",
-                        "if angle > 70 then",
-                        "    return true",
-                        "else",
-                        "    return false",
-                        "end"
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Succeed",
-                  "id": "d72a2512-b28a-4a21-8fa6-3c16c83a54f8",
-                  "type": "success"
-                }
-              ],
-              "active": true
+              "id": "9eb15e7b-4cc5-4f7b-907b-b269c0e57bf0",
+              "type": "scriptCondition",
+              "name": "ValidTarget + not stop",
+              "script": [
+                "return (loc.target ~= nil and loc.stop ~= 1)"
+              ]
             }
           ]
         },
         {
-          "name": "Succeed",
-          "id": "bfb31187-bd99-4cb5-8d80-74b8ba0ad14f",
-          "type": "success"
+          "name": "ChangeStance",
+          "id": "d921da36-8477-482f-8e85-253cf20582ea",
+          "type": "sequence",
+          "subtrees": [
+            {
+              "name": "Prone",
+              "id": "afce933b-e473-42cc-abe9-d1cf83fb00ab",
+              "type": "setStance",
+              "stance": [
+                "return Stance.Prone"
+              ]
+            },
+            {
+              "name": "Stand",
+              "id": "ea6c88e0-0951-4850-b4db-cce57316ce9c",
+              "type": "setStance",
+              "stance": [
+                "return Stance.Standing"
+              ]
+            },
+            {
+              "name": "Reset condition",
+              "id": "48db73e7-db67-474a-9f95-20d53cfd486e",
+              "type": "scriptAction",
+              "script": [
+                "loc.stop = 2"
+              ]
+            }
+          ],
+          "decorators": [
+            {
+              "id": "84d5cbd3-cd19-43d1-ac2c-c912ae737f66",
+              "type": "scriptCondition",
+              "name": "stop",
+              "script": [
+                "return loc.stop == 1"
+              ]
+            }
+          ]
+        }
+      ],
+      "decorators": [
+        {
+          "id": "bd3dcd5e-d4c0-4465-92ae-3f0118f4f1a9",
+          "type": "loopForever",
+          "name": "<unnamed>"
         }
       ],
       "active": true
@@ -255,129 +270,148 @@
   ],
   "unlinked-trees": [
     {
-      "name": "Wait 1s",
-      "id": "6be609a4-a312-4f08-aafd-64a9c178e2b3",
-      "type": "wait",
+      "name": "<unnamed>",
+      "id": "070cfc4c-3c71-49a2-a722-00ba01d3bfbb",
+      "type": "sequence",
+      "subtrees": [
+        {
+          "name": "Wait 1",
+          "id": "ed869ffa-05e8-4063-90bb-f146e5400e28",
+          "type": "wait",
+          "time": [
+            "1"
+          ]
+        },
+        {
+          "name": "Reset condition",
+          "id": "6e1c7ea2-4d30-4f06-9846-e149f504d524",
+          "type": "scriptAction",
+          "script": [
+            "loc.stop = 2"
+          ]
+        }
+      ],
       "meta": {
         "nodesInfo": [
           {
-            "id": "6be609a4-a312-4f08-aafd-64a9c178e2b3",
-            "position": "2570.29047619047,1166.56714285714"
+            "id": "070cfc4c-3c71-49a2-a722-00ba01d3bfbb",
+            "position": "3581.16666666666,1793.23863111111"
+          },
+          {
+            "id": "ed869ffa-05e8-4063-90bb-f146e5400e28",
+            "position": "3493.66666666666,1980.73863111111"
+          },
+          {
+            "id": "6e1c7ea2-4d30-4f06-9846-e149f504d524",
+            "position": "3681.16666666666,1980.73863111111"
           }
         ],
         "editorObjects": []
-      },
-      "time": [
-        "1"
-      ]
+      }
     }
   ],
   "meta": {
     "nodesInfo": [
       {
-        "id": "6980f8b8-1513-4189-b898-aa91e5fbe076",
-        "position": "1232.79047619047,354.067142857142"
+        "id": "6c3e0e0c-5dce-4a34-8fa2-5d6dd3eb333d",
+        "position": "1893.66666666666,1143.23863111111"
       },
       {
-        "id": "8bebcf14-03ca-4dbf-87c3-e7811c57451e",
-        "position": "532.790476190474,604.067142857142"
+        "id": "99a332ab-704e-4d4b-ad67-c697de72ea18",
+        "position": "882.666666666664,1418.23863111111"
       },
       {
-        "id": "1081edb0-990c-4e35-b670-a294d141822d",
-        "position": "332.790476190474,779.067142857142"
+        "id": "d2c348ab-d775-40e1-a228-eac7e6791796",
+        "position": "432.666666666664,1705.73863111111"
       },
       {
-        "id": "3fa7ac38-ce74-4f0b-9784-2bdfaf0ecfc5",
-        "position": "507.790476190474,779.067142857142"
+        "id": "39319d66-c363-4d71-bba7-24a330b7d413",
+        "position": "607.666666666664,1705.73863111111"
       },
       {
-        "id": "911412f4-56fb-4535-85b6-f75efedadc87",
-        "position": "695.290476190474,779.067142857142"
+        "id": "1f9501a2-8c5d-459b-aea9-be5ed4830673",
+        "position": "795.166666666664,1705.73863111111"
       },
       {
-        "id": "6c4bfe10-1817-4133-8496-04dc6d103259",
-        "position": "1232.79047619048,554.067142857142"
+        "id": "89b34532-1ee8-4f01-8c0c-9f8d0c57e8a7",
+        "position": "970.166666666664,1705.73863111111"
       },
       {
-        "id": "0cc92195-0186-4d26-86f5-7fc94aebb3e0",
-        "position": "945.290476190474,766.567142857142"
+        "id": "9dc5644a-f0c6-47e7-a368-b0a2ba84184e",
+        "position": "1132.66666666666,1705.73863111111"
       },
       {
-        "id": "9f9ef4ac-0346-4e73-9a12-465065f6563d",
-        "position": "1120.29047619048,766.567142857142"
+        "id": "03ede8e4-ff0a-4cbd-bbb0-c5c09a78e62d",
+        "position": "1307.66666666666,1705.73863111111"
       },
       {
-        "id": "e8d54932-8675-4d37-a444-a0e6dead85b2",
-        "position": "1295.29047619048,766.567142857142"
+        "id": "802ab9a5-aaf4-4f90-b909-be744581139c",
+        "position": "1634.37835497835,1585.82448969697"
       },
       {
-        "id": "7c5597db-6f1c-4a56-aa83-5d9801459076",
-        "position": "1482.79047619048,766.567142857142"
+        "id": "d6f0b7a1-3436-46c4-9308-848452f200c0",
+        "position": "1557.66666666666,1680.73863111111"
       },
       {
-        "id": "7072c65f-7223-4c3e-a747-c88aad4df989",
-        "position": "2132.79047619048,579.067142857142"
+        "id": "0a6c64e6-9a50-40da-94a4-d7604bf18a1d",
+        "position": "1432.66666666666,1818.23863111111"
       },
       {
-        "id": "df1cae78-67fb-41e2-9a63-690abe93b06b",
-        "position": "1732.79047619048,729.067142857142"
+        "id": "9ac77665-7269-4729-85bc-7cc28648e752",
+        "position": "1657.66666666666,1818.23863111111"
       },
       {
-        "id": "d1b5011e-8266-42d1-a275-499f3d754569",
-        "position": "1731.99047619048,925.317142857142"
+        "id": "46c4d711-df70-4552-8725-efb8e7849953",
+        "position": "1807.66666666666,1705.73863111111"
       },
       {
-        "id": "99cd5ac4-376f-4f4f-b21a-65573f39d64b",
-        "position": "2132.79047619048,779.067142857142"
+        "id": "4df8d561-fe7b-403f-be2f-3c14eaf0db03",
+        "position": "2607.66666666666,1393.23863111111"
       },
       {
-        "id": "11087a27-d70a-4e3c-b33c-2903375c273e",
-        "position": "1932.79047619048,941.567142857142"
+        "id": "6117d181-773c-4ecc-8eb7-68570738763b",
+        "position": "2232.66666666666,1668.23863111111"
       },
       {
-        "id": "7e37ead2-5c78-463b-82da-03cbf800b9ac",
-        "position": "2095.29047619047,941.567142857142"
+        "id": "3f37bb71-e7c7-4dd3-98ea-010b5c551b53",
+        "position": "2232.66666666666,1855.73863111111"
       },
       {
-        "id": "d8a40a9f-7bea-4f44-82f8-83a26eaa918a",
-        "position": "2257.79047619047,941.567142857142"
+        "id": "14c8e230-f003-42d7-b526-a7819713527f",
+        "position": "2582.66666666666,1668.23863111111"
       },
       {
-        "id": "4e3fd2bc-e92e-4e1e-935e-06d06fe1f33e",
-        "position": "2420.29047619047,941.567142857142"
+        "id": "7a045159-2335-418f-a2d6-2d4fcc459b22",
+        "position": "2445.16666666666,1843.23863111111"
       },
       {
-        "id": "84728e36-df71-479e-972f-3ae68772b8db",
-        "position": "2582.79047619047,941.567142857142"
+        "id": "c6ff79eb-50d5-4977-a97b-7c030f8f4cea",
+        "position": "2607.66666666666,1843.23863111111"
       },
       {
-        "id": "e7bfc315-410e-4fb0-9cb7-ce11c4421bff",
-        "position": "2957.79047619047,879.067142857142"
+        "id": "46234754-a391-42de-b3b1-dcfccf2573e0",
+        "position": "2771.55238095238,1845.16291682541"
       },
       {
-        "id": "3ab6b6e3-4834-4f09-a572-2de11caebc95",
-        "position": "2820.29047619047,1004.06714285714"
+        "id": "d921da36-8477-482f-8e85-253cf20582ea",
+        "position": "3045.16666666666,1705.73863111111"
       },
       {
-        "id": "8db6eb30-dda4-4161-8149-c3c3fa785eb9",
-        "position": "2745.29047619047,1166.56714285714"
+        "id": "afce933b-e473-42cc-abe9-d1cf83fb00ab",
+        "position": "2970.16666666666,1868.23863111111"
       },
       {
-        "id": "d5f0cb17-72c5-4cdd-bd4f-6c5f51dab29a",
-        "position": "2932.79047619047,1166.56714285714"
+        "id": "ea6c88e0-0951-4850-b4db-cce57316ce9c",
+        "position": "3145.16666666666,1868.23863111111"
       },
       {
-        "id": "d72a2512-b28a-4a21-8fa6-3c16c83a54f8",
-        "position": "3095.29047619047,1004.06714285714"
-      },
-      {
-        "id": "bfb31187-bd99-4cb5-8d80-74b8ba0ad14f",
-        "position": "2482.79047619048,729.067142857142"
+        "id": "48db73e7-db67-474a-9f95-20d53cfd486e",
+        "position": "3320.16666666666,1868.23863111111"
       }
     ],
     "editorObjects": [],
-    "canvasSize": "4960.29047619048,2716.56714285714",
-    "gridPadding": "7.79047619047445,4.06714285714236"
+    "canvasSize": "8307.64777777777,3885.00471060317",
+    "gridPadding": "6.16666666666379,5.73863111111075"
   },
   "parameters": [],
   "locals": {
@@ -386,7 +420,6 @@
     "dist": "return nil",
     "path_query": "return nil",
     "path": "return nil",
-    "segs_count": "return -1",
-    "ang": "return nil"
+    "stop": "return 0"
   }
 }
