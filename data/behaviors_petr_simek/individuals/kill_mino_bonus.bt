@@ -82,7 +82,7 @@
             "    local dir = loc.path:DirectionAlongPath(1)",
             "    local turn = MathExt.AngleDiff(dir, self:GetHeading())",
             "    local angle = math.abs(turn)",
-            "    if angle > 70 then",
+            "    if angle > 25 then",
             "        loc.stop = 1",
             "    end",
             "end"
@@ -119,7 +119,7 @@
                 {
                   "id": "3b7e2407-c098-42ed-80bb-af4ce3f5d6ea",
                   "type": "scriptCondition",
-                  "name": "<unnamed>",
+                  "name": "Mid-reset",
                   "script": [
                     "return loc.stop == 2"
                   ]
@@ -193,7 +193,7 @@
               "id": "c6ff79eb-50d5-4977-a97b-7c030f8f4cea",
               "type": "scriptAction",
               "script": [
-                "self:ReqHeadingFormationIfStationary()"
+                "self:ReqHeadingRelToMove(0)"
               ]
             },
             {
@@ -217,29 +217,21 @@
           ]
         },
         {
-          "name": "ChangeStance",
-          "id": "d921da36-8477-482f-8e85-253cf20582ea",
+          "name": "Stop",
+          "id": "070cfc4c-3c71-49a2-a722-00ba01d3bfbb",
           "type": "sequence",
           "subtrees": [
             {
-              "name": "Prone",
-              "id": "afce933b-e473-42cc-abe9-d1cf83fb00ab",
-              "type": "setStance",
-              "stance": [
-                "return Stance.Prone"
-              ]
-            },
-            {
-              "name": "Stand",
-              "id": "ea6c88e0-0951-4850-b4db-cce57316ce9c",
-              "type": "setStance",
-              "stance": [
-                "return Stance.Standing"
+              "name": "Wait 1",
+              "id": "ed869ffa-05e8-4063-90bb-f146e5400e28",
+              "type": "wait",
+              "time": [
+                "1"
               ]
             },
             {
               "name": "Reset condition",
-              "id": "48db73e7-db67-474a-9f95-20d53cfd486e",
+              "id": "6e1c7ea2-4d30-4f06-9846-e149f504d524",
               "type": "scriptAction",
               "script": [
                 "loc.stop = 2"
@@ -266,48 +258,6 @@
         }
       ],
       "active": true
-    }
-  ],
-  "unlinked-trees": [
-    {
-      "name": "<unnamed>",
-      "id": "070cfc4c-3c71-49a2-a722-00ba01d3bfbb",
-      "type": "sequence",
-      "subtrees": [
-        {
-          "name": "Wait 1",
-          "id": "ed869ffa-05e8-4063-90bb-f146e5400e28",
-          "type": "wait",
-          "time": [
-            "1"
-          ]
-        },
-        {
-          "name": "Reset condition",
-          "id": "6e1c7ea2-4d30-4f06-9846-e149f504d524",
-          "type": "scriptAction",
-          "script": [
-            "loc.stop = 2"
-          ]
-        }
-      ],
-      "meta": {
-        "nodesInfo": [
-          {
-            "id": "070cfc4c-3c71-49a2-a722-00ba01d3bfbb",
-            "position": "3581.16666666666,1793.23863111111"
-          },
-          {
-            "id": "ed869ffa-05e8-4063-90bb-f146e5400e28",
-            "position": "3493.66666666666,1980.73863111111"
-          },
-          {
-            "id": "6e1c7ea2-4d30-4f06-9846-e149f504d524",
-            "position": "3681.16666666666,1980.73863111111"
-          }
-        ],
-        "editorObjects": []
-      }
     }
   ],
   "meta": {
@@ -393,20 +343,16 @@
         "position": "2771.55238095238,1845.16291682541"
       },
       {
-        "id": "d921da36-8477-482f-8e85-253cf20582ea",
-        "position": "3045.16666666666,1705.73863111111"
+        "id": "070cfc4c-3c71-49a2-a722-00ba01d3bfbb",
+        "position": "3043.66666666666,1668.23863111111"
       },
       {
-        "id": "afce933b-e473-42cc-abe9-d1cf83fb00ab",
-        "position": "2970.16666666666,1868.23863111111"
+        "id": "ed869ffa-05e8-4063-90bb-f146e5400e28",
+        "position": "2956.16666666666,1855.73863111111"
       },
       {
-        "id": "ea6c88e0-0951-4850-b4db-cce57316ce9c",
-        "position": "3145.16666666666,1868.23863111111"
-      },
-      {
-        "id": "48db73e7-db67-474a-9f95-20d53cfd486e",
-        "position": "3320.16666666666,1868.23863111111"
+        "id": "6e1c7ea2-4d30-4f06-9846-e149f504d524",
+        "position": "3143.66666666666,1855.73863111111"
       }
     ],
     "editorObjects": [],
