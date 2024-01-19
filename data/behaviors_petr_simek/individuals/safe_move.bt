@@ -1,264 +1,107 @@
 {
   "name": "<unnamed>",
-  "id": "28ff8144-917f-404d-8860-511b69d72bfb",
-  "type": "supervisedParallel",
+  "id": "e7911fb9-094f-46bb-9474-362a7510a924",
+  "type": "sequence",
   "subtrees": [
     {
-      "name": "Draw",
-      "id": "9a7fb697-9c8c-496c-8a2d-349808c879b0",
-      "type": "selector",
-      "subtrees": [
-        {
-          "name": "Draw",
-          "id": "04ee2783-56a0-454f-b91f-337c556378d4",
-          "type": "scriptAction",
-          "decorators": [
-            {
-              "id": "c3732b5a-e335-4122-87cb-370a69010d9b",
-              "type": "scriptCondition",
-              "name": "Valid target",
-              "script": [
-                "return loc.target_pos ~= nil"
-              ]
-            }
-          ],
-          "script": [
-            "local my_pos = loc.my_pos",
-            "local enemy_pos = loc.target_pos",
-            "local center = (my_pos + enemy_pos) / 2",
-            "local dim = loc.dimension / 4",
-            "",
-            "local p1 = GetSurfacePosition(center + Vec3(dim, dim, 0))",
-            "local p2 = GetSurfacePosition(center + Vec3(dim, -dim, 0))",
-            "local p3 = GetSurfacePosition(center + Vec3(-dim, dim, 0))",
-            "local p4 = GetSurfacePosition(center + Vec3(-dim, -dim, 0))",
-            "",
-            "local p6 = GetSurfacePosition(center + Vec3(dim, -0, 0))",
-            "local p7 = GetSurfacePosition(center + Vec3(-dim, 0, 0))",
-            "local p8 = GetSurfacePosition(center + Vec3(0, dim, 0))",
-            "local p9 = GetSurfacePosition(center + Vec3(0, -dim, 0))",
-            "",
-            "local off = Vec3(0, 0, 100)",
-            "DebugLine(p1, p1 + off, 1, 0, 0, 1)",
-            "DebugLine(p2, p2 + off, 1, 0, 0, 1)",
-            "DebugLine(p3, p3 + off, 1, 0, 0, 1)",
-            "DebugLine(p4, p4 + off, 1, 0, 0, 1)",
-            "DebugLine(p6, p6 + off, 1, 0, 0, 1)",
-            "DebugLine(p7, p7 + off, 1, 0, 0, 1)",
-            "DebugLine(p8, p8 + off, 1, 0, 0, 1)",
-            "DebugLine(p9, p9 + off, 1, 0, 0, 1)"
-          ]
-        },
-        {
-          "name": "Succeed",
-          "id": "39a9819f-b901-4446-bce5-d74de3b8a09a",
-          "type": "success"
-        }
-      ],
-      "decorators": [
-        {
-          "id": "7272e3aa-3fd8-40f0-9424-7ccbf178c9e0",
-          "type": "loopForever",
-          "name": "<unnamed>"
-        }
-      ],
-      "active": true
-    },
-    {
-      "name": "<unnamed>",
-      "id": "e7911fb9-094f-46bb-9474-362a7510a924",
+      "name": "GetTarget",
+      "id": "cfb26105-03d9-4fa7-ab6d-c3fec2f90c50",
       "type": "sequence",
       "subtrees": [
         {
-          "name": "GetTarget",
-          "id": "cfb26105-03d9-4fa7-ab6d-c3fec2f90c50",
-          "type": "sequence",
-          "subtrees": [
-            {
-              "name": "FindTarget",
-              "id": "4f9f01b3-1203-489d-b23f-76b12a511b96",
-              "type": "scriptAction",
-              "script": [
-                "for i, entity in ipairs( ",
-                "    GetEntitiesInArea( ",
-                "        Circle(",
-                "            self:GetPosition(), ",
-                "            10000",
-                "        ), ",
-                "        { ",
-                "            enemyOf = self ",
-                "        }",
-                "    ) ",
-                ") ",
-                "do",
-                "    loc.target = entity",
-                "    break",
-                "end",
-                "",
-                "loc.target_pos = loc.target:GetPosition()",
-                "loc.my_pos = self:GetPosition()"
-              ]
-            },
-            {
-              "name": "GetPath",
-              "id": "fd79aeb0-73fd-4b7f-b6cf-ec4295bb0c27",
-              "type": "scriptAction",
-              "script": [
-                "local my_pos = self:GetPosition()",
-                "local enemy_pos = loc.target_pos",
-                "local avoid_point = (my_pos + enemy_pos) / 2",
-                "loc.dist = my_pos:Distance(enemy_pos)",
-                "",
-                "",
-                "loc.path_query = FindPath(my_pos, enemy_pos,",
-                "{",
-                "    --movementRestrictions = MovementRestrictions.StayOnRoad,",
-                "    threats = {{avoidance = 3} }",
-                "    --[[boundaries = {",
-                "        include = {},",
-                "        exclude = {OrientedRectangle(avoid_point, loc.dimension/2, loc.dimension/2, 0)}",
-                "    }]]--",
-                "})"
-              ]
-            },
-            {
-              "name": "WaitForPath",
-              "id": "02a6850d-f9e9-4abd-a00c-d28590f3db4e",
-              "type": "waitUntil",
-              "condition": [
-                "local rdy = loc.path_query:IsReady()",
-                "if rdy then",
-                "loc.path = loc.path_query:Value()",
-                "loc.segments = loc.path:Length() / loc.seg_len",
-                "loc.curr_seg = 1",
-                "",
-                "end",
-                "return rdy"
-              ]
-            }
+          "name": "Init",
+          "id": "d4740e54-828e-4d95-a82b-3b9774766989",
+          "type": "scriptAction",
+          "script": [
+            "loc.target_pos = arg.target_pos",
+            "loc.my_pos = self:GetPosition()"
           ]
         },
         {
-          "name": "Move in",
-          "id": "163c413c-74d4-4f51-844d-1c21baa4793b",
-          "type": "sequence",
-          "subtrees": [
-            {
-              "name": "Move",
-              "id": "b48c563f-8814-4887-89d2-d8854e1aacd1",
-              "type": "move",
-              "position": [
-                "local p = loc.path",
-                "local i = loc.curr_seg",
-                "local len = loc.seg_len",
-                "local dest = p:PositionAlongPath(i * len)",
-                "return dest"
-              ]
-            },
-            {
-              "name": "increment",
-              "id": "4646b0b4-b618-463b-b1c5-d7ad9637d665",
-              "type": "scriptAction",
-              "script": [
-                "local i = loc.curr_seg",
-                "loc.curr_seg = i + 1"
-              ]
-            }
-          ],
-          "decorators": [
-            {
-              "id": "036b6e97-ec4d-418b-8c9e-6ed64018f47a",
-              "type": "countedLoop",
-              "name": "for i in range(path/seg_len)",
-              "count": [
-                "return loc.segments"
-              ]
-            }
+          "name": "GetPath",
+          "id": "fd79aeb0-73fd-4b7f-b6cf-ec4295bb0c27",
+          "type": "scriptAction",
+          "script": [
+            "local my_pos = self:GetPosition()",
+            "local target_pos = loc.target_pos",
+            "",
+            "loc.path_query = FindPath(my_pos, target_pos, arg.path_args)"
           ]
         },
         {
-          "name": "MoveToTarget",
-          "id": "ca5843b1-77bf-4b9f-a431-eeac0d85a25e",
-          "type": "move",
-          "position": [
-            "return loc.target_pos"
+          "name": "WaitForPath",
+          "id": "02a6850d-f9e9-4abd-a00c-d28590f3db4e",
+          "type": "waitUntil",
+          "condition": [
+            "local rdy = loc.path_query:IsReady()",
+            "if rdy then",
+            "loc.path = loc.path_query:Value()",
+            "loc.segments = loc.path:Length() / arg.segment_len",
+            "loc.curr_seg = 1",
+            "",
+            "end",
+            "return rdy"
           ]
         }
       ]
-    }
-  ],
-  "unlinked-trees": [
+    },
     {
-      "name": "HoldPosition",
-      "id": "f5b1d2e5-61db-4b8d-8fdd-378a6a4a4f58",
+      "name": "Move in",
+      "id": "163c413c-74d4-4f51-844d-1c21baa4793b",
       "type": "sequence",
       "subtrees": [
         {
-          "name": "Crouch",
-          "id": "e91abfe3-0c14-4f32-89b9-878b23dd6a87",
-          "type": "setStance",
-          "stance": [
-            "return Stance.Crouched"
+          "name": "Move",
+          "id": "b48c563f-8814-4887-89d2-d8854e1aacd1",
+          "type": "move",
+          "position": [
+            "local p = loc.path",
+            "local i = loc.curr_seg",
+            "local len = arg.segment_len",
+            "local dest = p:PositionAlongPath(i * len)",
+            "return dest"
           ]
         },
         {
           "name": "Wait",
-          "id": "5b1c684c-f822-4d6a-9997-63647d95521a",
+          "id": "e73a3315-06df-470b-bfcc-a165952f2857",
           "type": "wait",
           "time": [
-            "2"
+            "1"
           ]
         },
         {
-          "name": "Stand",
-          "id": "c2c3af93-5c18-423e-ab67-25e0bf7302d0",
-          "type": "setStance",
-          "stance": [
-            "return Stance.Standing"
+          "name": "increment",
+          "id": "4646b0b4-b618-463b-b1c5-d7ad9637d665",
+          "type": "scriptAction",
+          "script": [
+            "local i = loc.curr_seg",
+            "loc.curr_seg = i + 1"
           ]
         }
       ],
-      "meta": {
-        "nodesInfo": [
-          {
-            "id": "f5b1d2e5-61db-4b8d-8fdd-378a6a4a4f58",
-            "position": "2833.308,1033.19333333333"
-          },
-          {
-            "id": "e91abfe3-0c14-4f32-89b9-878b23dd6a87",
-            "position": "2670.808,1195.69333333333"
-          },
-          {
-            "id": "5b1c684c-f822-4d6a-9997-63647d95521a",
-            "position": "2845.808,1195.69333333333"
-          },
-          {
-            "id": "c2c3af93-5c18-423e-ab67-25e0bf7302d0",
-            "position": "3020.808,1195.69333333333"
-          }
-        ],
-        "editorObjects": []
-      }
+      "decorators": [
+        {
+          "id": "036b6e97-ec4d-418b-8c9e-6ed64018f47a",
+          "type": "countedLoop",
+          "name": "for i in range(path/seg_len)",
+          "count": [
+            "return loc.segments"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "MoveToTarget",
+      "id": "ca5843b1-77bf-4b9f-a431-eeac0d85a25e",
+      "type": "move",
+      "position": [
+        "return loc.target_pos"
+      ]
     }
   ],
   "meta": {
     "nodesInfo": [
-      {
-        "id": "28ff8144-917f-404d-8860-511b69d72bfb",
-        "position": "2370.808,370.693333333334"
-      },
-      {
-        "id": "9a7fb697-9c8c-496c-8a2d-349808c879b0",
-        "position": "1933.308,570.693333333334"
-      },
-      {
-        "id": "04ee2783-56a0-454f-b91f-337c556378d4",
-        "position": "1820.808,733.193333333334"
-      },
-      {
-        "id": "39a9819f-b901-4446-bce5-d74de3b8a09a",
-        "position": "2033.308,733.193333333334"
-      },
       {
         "id": "e7911fb9-094f-46bb-9474-362a7510a924",
         "position": "2820.808,620.693333333334"
@@ -268,7 +111,7 @@
         "position": "2183.308,883.193333333334"
       },
       {
-        "id": "4f9f01b3-1203-489d-b23f-76b12a511b96",
+        "id": "d4740e54-828e-4d95-a82b-3b9774766989",
         "position": "2008.308,1020.69333333333"
       },
       {
@@ -288,6 +131,10 @@
         "position": "2608.308,1033.19333333333"
       },
       {
+        "id": "e73a3315-06df-470b-bfcc-a165952f2857",
+        "position": "2820.808,1033.19333333333"
+      },
+      {
         "id": "4646b0b4-b618-463b-b1c5-d7ad9637d665",
         "position": "3033.308,1033.19333333333"
       },
@@ -300,14 +147,28 @@
     "canvasSize": "4881.288,3020.69333333333",
     "gridPadding": "8.30799999999886,8.19333333333424"
   },
-  "parameters": [],
+  "parameters": [
+    {
+      "name": "target_pos",
+      "isOptional": false,
+      "defaultValue": ""
+    },
+    {
+      "name": "segment_len",
+      "isOptional": true,
+      "defaultValue": "return 25"
+    },
+    {
+      "name": "path_args",
+      "isOptional": true,
+      "defaultValue": "return {threats = {{avoidance = 3}}}"
+    }
+  ],
   "locals": {
-    "target": "return nil",
     "target_pos": "return nil",
     "path_query": "return nil",
     "path": "return nil",
     "segments": "return -1",
-    "seg_len": "return 25",
     "curr_seg": "return -1",
     "dist": "return 0",
     "dimension": "return 200",

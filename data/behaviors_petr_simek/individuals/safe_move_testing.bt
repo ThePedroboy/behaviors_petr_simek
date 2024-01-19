@@ -1,0 +1,101 @@
+{
+  "name": "<unnamed>",
+  "id": "306bef12-0f63-4725-895e-4445cdd87de6",
+  "type": "sequence",
+  "subtrees": [
+    {
+      "name": "Set Target Pos",
+      "id": "4fec0319-7ae0-464e-a33e-7cecefcab390",
+      "type": "scriptAction",
+      "script": [
+        "loc.target_pos = Vec3(999928.87, 1000078.5, 541.3)"
+      ]
+    },
+    {
+      "name": "SetPathArgs",
+      "id": "9ad4f0ef-593d-458d-99ff-4cd86324a7ad",
+      "type": "scriptAction",
+      "script": [
+        "loc.path_args = {",
+        "    movementRestrictions = MovementRestrictions.StayOnRoad",
+        "}"
+      ]
+    },
+    {
+      "name": "<unnamed>",
+      "id": "09b38cde-f445-4eed-bbbd-18db850ebe10",
+      "type": "reference",
+      "target": [
+        "behaviors_petr_simek",
+        "safe_move"
+      ],
+      "arguments": {
+        "path_args": "return {threats = {{avoidance = 3}}}",
+        "segment_len": "return 0",
+        "target_pos": "return loc.target_pos"
+      }
+    }
+  ],
+  "unlinked-trees": [
+    {
+      "name": "FindTarget",
+      "id": "c942735b-e577-4843-b5c7-8eb6849e4e84",
+      "type": "scriptAction",
+      "meta": {
+        "nodesInfo": [
+          {
+            "id": "c942735b-e577-4843-b5c7-8eb6849e4e84",
+            "position": "1087.5,387.82"
+          }
+        ],
+        "editorObjects": []
+      },
+      "script": [
+        "for i, entity in ipairs( ",
+        "    GetEntitiesInArea( ",
+        "        Circle(",
+        "            self:GetPosition(), ",
+        "            10000",
+        "        ), ",
+        "        { ",
+        "            enemyOf = self ",
+        "        }",
+        "    ) ",
+        ") ",
+        "do",
+        "    loc.target_pos = entity:GetPosition()",
+        "    break",
+        "end"
+      ]
+    }
+  ],
+  "meta": {
+    "nodesInfo": [
+      {
+        "id": "306bef12-0f63-4725-895e-4445cdd87de6",
+        "position": "1487.5,125.32"
+      },
+      {
+        "id": "4fec0319-7ae0-464e-a33e-7cecefcab390",
+        "position": "1275,387.82"
+      },
+      {
+        "id": "9ad4f0ef-593d-458d-99ff-4cd86324a7ad",
+        "position": "1462.5,387.82"
+      },
+      {
+        "id": "09b38cde-f445-4eed-bbbd-18db850ebe10",
+        "position": "1666.2,376"
+      }
+    ],
+    "editorObjects": [],
+    "canvasSize": "3840,2501.12",
+    "gridPadding": "0,0.319999999999908"
+  },
+  "parameters": [],
+  "locals": {
+    "target_pos": "return nil",
+    "seg_len": "return 30",
+    "path_args": "return {}"
+  }
+}
