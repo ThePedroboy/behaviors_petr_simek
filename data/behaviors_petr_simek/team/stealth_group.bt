@@ -1,0 +1,235 @@
+{
+  "name": "<unnamed>",
+  "id": "d2b4ebd1-067e-4acb-b676-1b638f273880",
+  "type": "supervisedParallel",
+  "subtrees": [
+    {
+      "name": "<unnamed>",
+      "id": "abedf1fe-6d5b-4ce5-97d6-15cb411e03e4",
+      "type": "selector",
+      "subtrees": [
+        {
+          "name": "<unnamed>",
+          "id": "52800a23-c667-499d-be76-b18a70b0000c",
+          "type": "sequence",
+          "subtrees": [
+            {
+              "name": "Assign point man",
+              "id": "3f1bcb1e-86f3-4276-8905-608a1016d92d",
+              "type": "scriptAction",
+              "script": [
+                "if loc.point_man_id == -1 then",
+                "    -- point man is unassigned -> assign",
+                "    for i = 0, self:GetEntityCount() - 1",
+                "    do",
+                "        local curr_entity = self:GetEntity(i)",
+                "        if curr_entity:IsAlive() then",
+                "            -- this is new point man",
+                "            self:SendMessage(",
+                "                curr_entity, ",
+                "                \"NewOrder\", ",
+                "                {",
+                "                    orderName = \"PointMan\",",
+                "                    position = arg.orderData.position,",
+                "                    parentOrderData = arg.orderData,",
+                "                }",
+                "            )",
+                "            loc.point_man_id = i",
+                "            DebugLog(\"New point man assigned\")",
+                "            break",
+                "        end",
+                "    end",
+                "end",
+                "",
+                "if loc.point_man_id == -1 then",
+                "    -- all soldiers checked and no point man found -> all dead",
+                "    DebugLog(\"No pointman assigend, all dead!\")",
+                "end"
+              ]
+            },
+            {
+              "name": "Wait Forever",
+              "id": "d11f9f05-aacc-4cc3-9c60-cbd8b7489bfe",
+              "type": "waitForever"
+            }
+          ],
+          "decorators": [
+            {
+              "id": "a1988ae8-9b24-46b5-8ffc-a1b9a68943ed",
+              "type": "scriptCondition",
+              "name": "Should assign pointman",
+              "script": [
+                "return loc.point_man_id == -1"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Wait Forever",
+          "id": "266ab942-740c-436a-b532-71ce96bd2c65",
+          "type": "waitForever"
+        }
+      ],
+      "active": true
+    },
+    {
+      "name": "<unnamed>",
+      "id": "ec8413f8-7882-410a-baa8-010897305f1f",
+      "type": "sequence",
+      "subtrees": [
+        {
+          "name": "Set invalid point man",
+          "id": "87a0f40e-84be-4223-8ad4-ef6ff77ef50e",
+          "type": "scriptAction",
+          "script": [
+            "loc.point_man_id = -1"
+          ]
+        }
+      ],
+      "decorators": [
+        {
+          "id": "e784836f-0071-43b1-884a-bf39c818ea18",
+          "type": "succeeder",
+          "name": "Always Succeed"
+        },
+        {
+          "id": "60030f08-ad01-4be5-bf89-5260f096732a",
+          "type": "scriptCondition",
+          "name": "Is point man dead",
+          "script": [
+            "if loc.point_man_id == -1 then",
+            "    return false",
+            "else",
+            "    return not self:GetEntity(loc.point_man_id):IsAlive()",
+            "end "
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Periodically assign followers",
+      "id": "1a95a289-f6b0-4113-8e42-60c969d84b55",
+      "type": "sequence",
+      "subtrees": [
+        {
+          "name": "Assign followers",
+          "id": "8adaf578-d69c-4622-961d-852346b6d11d",
+          "type": "scriptAction",
+          "script": [
+            "local last_entity = self:GetEntity(loc.point_man_id)",
+            "",
+            "for i = 0, self:GetEntityCount() - 1",
+            "do",
+            "    if i ~= loc.point_man_id then",
+            "        local curr_entity = self:GetEntity(i)",
+            "        if curr_entity:IsAlive() then",
+            "            self:SendMessage(",
+            "                curr_entity, ",
+            "                \"NewOrder\", ",
+            "                {",
+            "                    orderName = \"Follower\",",
+            "                    target = last_entity,",
+            "                }",
+            "            )",
+            "            last_entity = curr_entity",
+            "        end",
+            "    end",
+            "end",
+            "DebugLog(\"Followers re-assigned\")"
+          ]
+        }
+      ],
+      "decorators": [
+        {
+          "id": "066e6786-e4da-400e-9594-39bd9a59f86d",
+          "type": "succeeder",
+          "name": "Always Succeed"
+        },
+        {
+          "id": "193f5dd7-0253-4fdf-a164-346ab2c00b25",
+          "type": "scriptCondition",
+          "name": "Should reassign followers ?",
+          "script": [
+            "-- followers should be reassigned if someone died and pointman is assigned",
+            "if loc.point_man_id ~= -1 then",
+            "    local last_dead_count = loc.dead_count",
+            "    local new_dead_count = 0",
+            "",
+            "    for i = 0, self:GetEntityCount() - 1 do",
+            "        local curr_entity = self:GetEntity(i)",
+            "        if not curr_entity:IsAlive() then",
+            "            new_dead_count = new_dead_count + 1",
+            "        end",
+            "    end",
+            "",
+            "    if new_dead_count ~= last_dead_count then",
+            "        -- new dead -> reassign",
+            "        loc.dead_count = new_dead_count",
+            "        return true",
+            "    end",
+            "end",
+            "return false"
+          ]
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "nodesInfo": [
+      {
+        "id": "d2b4ebd1-067e-4acb-b676-1b638f273880",
+        "position": "2012.5,158.7"
+      },
+      {
+        "id": "abedf1fe-6d5b-4ce5-97d6-15cb411e03e4",
+        "position": "1737.5,358.7"
+      },
+      {
+        "id": "52800a23-c667-499d-be76-b18a70b0000c",
+        "position": "1562.5,596.2"
+      },
+      {
+        "id": "3f1bcb1e-86f3-4276-8905-608a1016d92d",
+        "position": "1500,733.7"
+      },
+      {
+        "id": "d11f9f05-aacc-4cc3-9c60-cbd8b7489bfe",
+        "position": "1687.5,733.7"
+      },
+      {
+        "id": "266ab942-740c-436a-b532-71ce96bd2c65",
+        "position": "1875,571.2"
+      },
+      {
+        "id": "ec8413f8-7882-410a-baa8-010897305f1f",
+        "position": "2225,346.2"
+      },
+      {
+        "id": "87a0f40e-84be-4223-8ad4-ef6ff77ef50e",
+        "position": "2225,558.7"
+      },
+      {
+        "id": "1a95a289-f6b0-4113-8e42-60c969d84b55",
+        "position": "2625,333.7"
+      },
+      {
+        "id": "8adaf578-d69c-4622-961d-852346b6d11d",
+        "position": "2650,546.2"
+      }
+    ],
+    "editorObjects": [],
+    "canvasSize": "3840,2596.2",
+    "gridPadding": "0,8.70000000000013"
+  },
+  "parameters": [
+    {
+      "name": "orderData",
+      "isOptional": false,
+      "defaultValue": ""
+    }
+  ],
+  "locals": {
+    "point_man_id": "return -1",
+    "dead_count": "return 0"
+  }
+}

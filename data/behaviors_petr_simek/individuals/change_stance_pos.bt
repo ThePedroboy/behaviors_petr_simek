@@ -1,0 +1,67 @@
+{
+  "name": "<unnamed>",
+  "id": "a408d1a3-6415-4e4d-8dea-d987ebd3a52d",
+  "type": "sequence",
+  "subtrees": [
+    {
+      "name": "Stance",
+      "id": "fd146fd5-a566-4004-ad42-5fb500259777",
+      "type": "setStance",
+      "stance": [
+        "return Stance.Crouched"
+      ]
+    },
+    {
+      "name": "Move",
+      "id": "dab9adc4-6e18-4ba3-bc2e-6989ca674b39",
+      "type": "move",
+      "position": [
+        "return arg.target_pos"
+      ]
+    },
+    {
+      "name": "Stance",
+      "id": "b8290e9f-11cc-4ba7-80df-c45b10e8bbb7",
+      "type": "setStance",
+      "stance": [
+        "return arg.target_stance"
+      ]
+    }
+  ],
+  "meta": {
+    "nodesInfo": [
+      {
+        "id": "a408d1a3-6415-4e4d-8dea-d987ebd3a52d",
+        "position": "1637.5,217"
+      },
+      {
+        "id": "fd146fd5-a566-4004-ad42-5fb500259777",
+        "position": "1462.5,367"
+      },
+      {
+        "id": "dab9adc4-6e18-4ba3-bc2e-6989ca674b39",
+        "position": "1637.5,367"
+      },
+      {
+        "id": "b8290e9f-11cc-4ba7-80df-c45b10e8bbb7",
+        "position": "1812.5,367"
+      }
+    ],
+    "editorObjects": [],
+    "canvasSize": "3840,2492",
+    "gridPadding": "0,4.50000000000003"
+  },
+  "parameters": [
+    {
+      "name": "target_pos",
+      "isOptional": false,
+      "defaultValue": ""
+    },
+    {
+      "name": "target_stance",
+      "isOptional": false,
+      "defaultValue": ""
+    }
+  ],
+  "locals": {}
+}

@@ -1,0 +1,31 @@
+{
+  "name": "ChangeStance",
+  "id": "c9f582bd-3d4d-4e24-ae59-a23845ca1b62",
+  "type": "sequence",
+  "subtrees": [
+    {
+      "name": "Crouch",
+      "id": "43f9aba8-c1ab-4a27-9d1a-9dd80f65dc6b",
+      "type": "setStance",
+      "stance": [
+        "return Stance.Crouched"
+      ]
+    }
+  ],
+  "meta": {
+    "nodesInfo": [
+      {
+        "id": "c9f582bd-3d4d-4e24-ae59-a23845ca1b62",
+        "position": "1825,212.5"
+      },
+      {
+        "id": "43f9aba8-c1ab-4a27-9d1a-9dd80f65dc6b",
+        "position": "1825,325"
+      }
+    ],
+    "editorObjects": [],
+    "canvasSize": "3840,2400"
+  },
+  "parameters": [],
+  "locals": {}
+}

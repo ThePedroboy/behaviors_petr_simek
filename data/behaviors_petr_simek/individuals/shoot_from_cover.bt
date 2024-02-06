@@ -1,0 +1,403 @@
+{
+  "name": "<unnamed>",
+  "id": "afa573bd-0247-43c9-8a63-e159d149e826",
+  "type": "supervisedParallel",
+  "subtrees": [
+    {
+      "name": "<unnamed>",
+      "id": "c8a2fcc6-45cf-44f1-8153-c57b87948219",
+      "type": "sequence",
+      "subtrees": [
+        {
+          "name": "Should Change State",
+          "id": "55ee8065-e585-4777-848e-a1aae2efc234",
+          "type": "scriptAction",
+          "script": [
+            "if loc.curr_hp == nil then",
+            "    loc.curr_hp = self:GetHealth()",
+            "end",
+            "",
+            "if loc.should_change == 1 then",
+            "    return",
+            "end",
+            "",
+            "if loc.covered == 0 and self:GetHealth() < loc.curr_hp then",
+            "    -- change immediatly -> dmg was taken",
+            "    loc.should_change = 1",
+            "    return",
+            "end",
+            "",
+            "local now = GetSimulationTime()",
+            "local delta = now - loc.last_changed",
+            "",
+            "if delta > loc.limit then",
+            "    loc.should_change = 1",
+            "end"
+          ]
+        },
+        {
+          "name": "Wait",
+          "id": "a2ec7811-a2e4-42be-9315-af7a38464e14",
+          "type": "wait",
+          "time": [
+            "0.4"
+          ]
+        }
+      ],
+      "decorators": [
+        {
+          "id": "9565e731-8bea-420d-88f9-56e78653f29d",
+          "type": "loopForever",
+          "name": "<unnamed>"
+        }
+      ]
+    },
+    {
+      "name": "<unnamed>",
+      "id": "834c9f32-d823-4bba-b1bc-eab50d3bdc64",
+      "type": "selector",
+      "subtrees": [
+        {
+          "name": "<unnamed>",
+          "id": "def38812-70fa-4d46-92f5-9510da70ae2a",
+          "type": "selector",
+          "subtrees": [
+            {
+              "name": "<unnamed>",
+              "id": "7f8b73f8-b9a5-4afd-9519-635112c5ed54",
+              "type": "sequence",
+              "subtrees": [
+                {
+                  "name": "Cover pos + stance",
+                  "id": "8bd5c922-70a2-48d2-8728-463efdd88259",
+                  "type": "reference",
+                  "target": [
+                    "behaviors_petr_simek",
+                    "change_stance_pos"
+                  ],
+                  "arguments": {
+                    "target_pos": "return arg.cover_pos",
+                    "target_stance": "return arg.cover_stance"
+                  }
+                },
+                {
+                  "name": "Save Variables",
+                  "id": "9365435f-d16e-49bb-995c-f70db9be1aaa",
+                  "type": "scriptAction",
+                  "script": [
+                    "local now = GetSimulationTime()",
+                    "loc.last_changed = now",
+                    "",
+                    "loc.covered = 1",
+                    "loc.should_change = 0",
+                    "loc.curr_hp = self:GetHealth()"
+                  ]
+                },
+                {
+                  "name": "<unnamed>",
+                  "id": "60acf524-e6a3-4555-8384-30ab36351874",
+                  "type": "selector",
+                  "subtrees": [
+                    {
+                      "name": "Reload",
+                      "id": "da9b3571-8e10-4750-ae54-d0a51f5836c6",
+                      "type": "reloadWeapon",
+                      "decorators": [
+                        {
+                          "id": "9ac67d9b-8e20-4083-a5fd-35333ab4a5e4",
+                          "type": "scriptCondition",
+                          "name": "Need reload ?",
+                          "script": [
+                            "return self:GetCurrentMagazine().rounds < 5"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Succeed",
+                      "id": "cc6a0716-4fd2-4e72-a39c-875a0cfd22d6",
+                      "type": "success"
+                    }
+                  ],
+                  "active": true
+                }
+              ],
+              "decorators": [
+                {
+                  "id": "1c9c17e7-8167-4492-a0ac-279fa9a144bc",
+                  "type": "scriptCondition",
+                  "name": "Change to cover",
+                  "script": [
+                    "return loc.covered == 0"
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "<unnamed>",
+              "id": "0a8c5f3a-7b3a-4b90-a24c-56d148ae5cd0",
+              "type": "sequence",
+              "subtrees": [
+                {
+                  "name": "Shoot pos + stance",
+                  "id": "253e44ae-50d0-4636-a04d-07266dde7272",
+                  "type": "reference",
+                  "target": [
+                    "behaviors_petr_simek",
+                    "change_stance_pos"
+                  ],
+                  "arguments": {
+                    "target_pos": "return arg.shoot_pos",
+                    "target_stance": "return arg.shoot_stance"
+                  }
+                },
+                {
+                  "name": "Save Variables",
+                  "id": "c030b2b9-b960-413d-a8e8-d5890dac2670",
+                  "type": "scriptAction",
+                  "script": [
+                    "local now = GetSimulationTime()",
+                    "loc.last_changed = now",
+                    "",
+                    "loc.covered = 0",
+                    "loc.should_change = 0",
+                    "loc.curr_hp = self:GetHealth()"
+                  ]
+                }
+              ],
+              "decorators": [
+                {
+                  "id": "6d25a4dc-c3c3-4974-a0e3-f747669c9582",
+                  "type": "scriptCondition",
+                  "name": "Change to shoot",
+                  "script": [
+                    "return loc.covered == 1"
+                  ]
+                }
+              ]
+            }
+          ],
+          "decorators": [
+            {
+              "id": "5db74645-c748-4ed2-8308-118a7e8e6b20",
+              "type": "scriptCondition",
+              "name": "Should Change",
+              "script": [
+                "return loc.should_change == 1"
+              ]
+            }
+          ],
+          "active": true
+        },
+        {
+          "name": "Succeed",
+          "id": "5c6bb518-0b7d-4daf-abe4-21656a6db6a6",
+          "type": "success"
+        }
+      ],
+      "decorators": [
+        {
+          "id": "be9b9daf-aa80-46d5-a3f4-45a417514184",
+          "type": "loopForever",
+          "name": "<unnamed>"
+        }
+      ],
+      "active": true
+    },
+    {
+      "name": "<unnamed>",
+      "id": "8107e119-0bcf-45d4-bde5-d7fd782c7c8f",
+      "type": "selector",
+      "subtrees": [
+        {
+          "name": "<unnamed>",
+          "id": "06881793-b2b5-4d3f-aa42-78192eab241b",
+          "type": "sequence",
+          "subtrees": [
+            {
+              "name": "Find Target",
+              "id": "915fcbc4-17b7-410b-b11e-5ad531437342",
+              "type": "scriptAction",
+              "script": [
+                "for i, entity in ipairs( ",
+                "    GetEntitiesInArea( ",
+                "        Circle(",
+                "            self:GetPosition(), ",
+                "            50",
+                "        ), ",
+                "        { ",
+                "            enemyOf = self",
+                "        }",
+                "    ) ",
+                ") ",
+                "do",
+                "    if entity:GetHealth() > 0 and self:IsClearSightTo(entity:GetPosition()) then",
+                "        loc.curr_target = entity",
+                "        break",
+                "    end",
+                "    loc.curr_target = nil",
+                "end"
+              ]
+            },
+            {
+              "name": "Kill target",
+              "id": "7d3ae05f-51b7-40b0-9db1-4f8996de3b76",
+              "type": "reference",
+              "target": [
+                "behaviors_petr_simek",
+                "fire_at_nearest"
+              ],
+              "arguments": {
+                "target": "return loc.curr_target"
+              }
+            }
+          ],
+          "decorators": [
+            {
+              "id": "fb5459c8-9a68-4497-9734-43cac0b3efef",
+              "type": "scriptCondition",
+              "name": "At Shoot Pos",
+              "script": [
+                "return loc.should_change == 0 and loc.covered == 0"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Succeed",
+          "id": "2627977a-54ed-463f-b6bd-8d0b73efa1e5",
+          "type": "success"
+        }
+      ],
+      "decorators": [
+        {
+          "id": "06ec56de-4d84-407c-8f4a-003d6448c6f1",
+          "type": "loopForever",
+          "name": "<unnamed>"
+        }
+      ],
+      "active": true
+    }
+  ],
+  "meta": {
+    "nodesInfo": [
+      {
+        "id": "afa573bd-0247-43c9-8a63-e159d149e826",
+        "position": "1673.64095238095,201.604952380952"
+      },
+      {
+        "id": "c8a2fcc6-45cf-44f1-8153-c57b87948219",
+        "position": "786.140952380955,414.104952380952"
+      },
+      {
+        "id": "55ee8065-e585-4777-848e-a1aae2efc234",
+        "position": "648.640952380955,639.104952380952"
+      },
+      {
+        "id": "a2ec7811-a2e4-42be-9315-af7a38464e14",
+        "position": "901.998095238098,636.533206349206"
+      },
+      {
+        "id": "834c9f32-d823-4bba-b1bc-eab50d3bdc64",
+        "position": "1673.64095238095,414.104952380952"
+      },
+      {
+        "id": "def38812-70fa-4d46-92f5-9510da70ae2a",
+        "position": "1673.64095238095,551.604952380952"
+      },
+      {
+        "id": "7f8b73f8-b9a5-4afd-9519-635112c5ed54",
+        "position": "1411.14095238095,614.104952380952"
+      },
+      {
+        "id": "8bd5c922-70a2-48d2-8728-463efdd88259",
+        "position": "1136.14095238095,814.104952380952"
+      },
+      {
+        "id": "9365435f-d16e-49bb-995c-f70db9be1aaa",
+        "position": "1373.64095238095,801.604952380952"
+      },
+      {
+        "id": "60acf524-e6a3-4555-8384-30ab36351874",
+        "position": "1548.64095238095,801.604952380952"
+      },
+      {
+        "id": "da9b3571-8e10-4750-ae54-d0a51f5836c6",
+        "position": "1436.14095238095,964.104952380952"
+      },
+      {
+        "id": "cc6a0716-4fd2-4e72-a39c-875a0cfd22d6",
+        "position": "1648.64095238095,964.104952380952"
+      },
+      {
+        "id": "0a8c5f3a-7b3a-4b90-a24c-56d148ae5cd0",
+        "position": "1923.64095238095,614.104952380952"
+      },
+      {
+        "id": "253e44ae-50d0-4636-a04d-07266dde7272",
+        "position": "1811.14095238095,801.604952380952"
+      },
+      {
+        "id": "c030b2b9-b960-413d-a8e8-d5890dac2670",
+        "position": "2023.64095238095,801.604952380952"
+      },
+      {
+        "id": "5c6bb518-0b7d-4daf-abe4-21656a6db6a6",
+        "position": "2086.14095238095,514.104952380952"
+      },
+      {
+        "id": "8107e119-0bcf-45d4-bde5-d7fd782c7c8f",
+        "position": "2623.64095238095,389.104952380952"
+      },
+      {
+        "id": "06881793-b2b5-4d3f-aa42-78192eab241b",
+        "position": "2623.64095238095,576.604952380952"
+      },
+      {
+        "id": "915fcbc4-17b7-410b-b11e-5ad531437342",
+        "position": "2461.14095238095,764.104952380952"
+      },
+      {
+        "id": "7d3ae05f-51b7-40b0-9db1-4f8996de3b76",
+        "position": "2698.64095238095,764.104952380952"
+      },
+      {
+        "id": "2627977a-54ed-463f-b6bd-8d0b73efa1e5",
+        "position": "2936.14095238095,526.604952380952"
+      }
+    ],
+    "editorObjects": [],
+    "canvasSize": "3951.14095238095,2589.10495238096",
+    "gridPadding": "11.1409523809546,1.60495238095214"
+  },
+  "parameters": [
+    {
+      "name": "shoot_stance",
+      "isOptional": false,
+      "defaultValue": ""
+    },
+    {
+      "name": "shoot_pos",
+      "isOptional": false,
+      "defaultValue": ""
+    },
+    {
+      "name": "cover_stance",
+      "isOptional": false,
+      "defaultValue": ""
+    },
+    {
+      "name": "cover_pos",
+      "isOptional": false,
+      "defaultValue": ""
+    }
+  ],
+  "locals": {
+    "should_change": "return 1",
+    "last_changed": "return nil",
+    "covered": "return 0",
+    "limit": "return 5",
+    "curr_hp": "return nil",
+    "curr_target": "return nil"
+  }
+}

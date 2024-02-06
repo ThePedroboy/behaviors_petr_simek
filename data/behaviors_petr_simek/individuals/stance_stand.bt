@@ -1,0 +1,31 @@
+{
+  "name": "ChangeStance",
+  "id": "da3598d5-853c-4df7-b2f7-93ab65ace25d",
+  "type": "sequence",
+  "subtrees": [
+    {
+      "name": "Stand",
+      "id": "c3e2b76c-b49e-4052-94f1-511508f08a86",
+      "type": "setStance",
+      "stance": [
+        "return Stance.Standing"
+      ]
+    }
+  ],
+  "meta": {
+    "nodesInfo": [
+      {
+        "id": "da3598d5-853c-4df7-b2f7-93ab65ace25d",
+        "position": "1820.5,123.35"
+      },
+      {
+        "id": "c3e2b76c-b49e-4052-94f1-511508f08a86",
+        "position": "1820.5,235.85"
+      }
+    ],
+    "editorObjects": [],
+    "canvasSize": "3840,2400"
+  },
+  "parameters": [],
+  "locals": {}
+}

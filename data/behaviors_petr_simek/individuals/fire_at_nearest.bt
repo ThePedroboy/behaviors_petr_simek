@@ -8,6 +8,12 @@
       "id": "95423d47-33fe-44bc-b5ca-3fa0c2ed82f3",
       "type": "scriptAction",
       "script": [
+        "if arg.target ~= nil then",
+        "    loc.target = arg.target",
+        "    return",
+        "end",
+        "",
+        "-- if no target was sent -> find one",
         "for i, entity in ipairs( ",
         "    GetEntitiesInArea( ",
         "        Circle(",
@@ -93,11 +99,11 @@
       },
       {
         "id": "6afcaeb7-6a30-4136-a356-8be2217aafe6",
-        "position": "1937.5,603.6"
+        "position": "1962.5,603.6"
       },
       {
         "id": "82dec8d3-006a-4282-b734-ff340ef15500",
-        "position": "2125,603.6"
+        "position": "2162.5,603.6"
       },
       {
         "id": "31f85aea-3935-468e-ac9c-4dccdc378352",
@@ -108,7 +114,13 @@
     "canvasSize": "3840,2553.6",
     "gridPadding": "0,3.59999999999994"
   },
-  "parameters": [],
+  "parameters": [
+    {
+      "name": "target",
+      "isOptional": true,
+      "defaultValue": "return nil"
+    }
+  ],
   "locals": {
     "target": "return nil"
   }

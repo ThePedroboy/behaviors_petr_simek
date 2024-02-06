@@ -1,0 +1,117 @@
+{
+  "name": "<unnamed>",
+  "id": "90bccf7f-9197-4e25-a098-edf35e2aec0d",
+  "type": "sequence",
+  "subtrees": [
+    {
+      "name": "Init",
+      "id": "3cfdc2dc-7032-4376-86cd-ce8125ca27ad",
+      "type": "scriptAction",
+      "script": [
+        "local my_pos = self:GetPosition()",
+        "local pos1 = my_pos + Vec3(2, 0, 0)",
+        "local pos2 = my_pos-- - Vec3(2, 0, 0)",
+        "loc.shoot_pos = pos1",
+        "loc.cover_pos = pos2",
+        "",
+        "for i, entity in ipairs( ",
+        "    GetEntitiesInArea( ",
+        "        Circle(",
+        "            self:GetPosition(), ",
+        "            50",
+        "        ), ",
+        "        { ",
+        "            enemyOf = self ",
+        "        }",
+        "    ) ",
+        ") ",
+        "do",
+        "    loc.enemy = entity",
+        "    break",
+        "end"
+      ]
+    },
+    {
+      "name": "Aim at enemy",
+      "id": "c48aa83b-b42b-42a7-a080-9b6553b38255",
+      "type": "scriptAction",
+      "script": [
+        "self:ReqHeadingAimAtEntity(loc.enemy)"
+      ]
+    },
+    {
+      "name": "ShootFromCover",
+      "id": "97585a3b-92b6-433c-81fa-e88def7637cc",
+      "type": "reference",
+      "target": [
+        "behaviors_petr_simek",
+        "shoot_from_cover"
+      ],
+      "arguments": {
+        "shoot_stance": "return Stance.Standing",
+        "shoot_pos": "return loc.shoot_pos",
+        "cover_stance": "return Stance.Crouched",
+        "cover_pos": "return loc.cover_pos"
+      }
+    },
+    {
+      "name": "Wait Forever",
+      "id": "dd1cb609-79ec-4496-8272-9fbe9fadcda5",
+      "type": "waitForever"
+    }
+  ],
+  "unlinked-trees": [
+    {
+      "name": "<unnamed>",
+      "id": "9f15f502-512b-4ba5-8b17-202e14e69eec",
+      "type": "reference",
+      "meta": {
+        "nodesInfo": [
+          {
+            "id": "9f15f502-512b-4ba5-8b17-202e14e69eec",
+            "position": "1975,444.3"
+          }
+        ],
+        "editorObjects": []
+      },
+      "target": [
+        "behaviors_petr_simek",
+        "shoot_from_cover_2"
+      ],
+      "arguments": {}
+    }
+  ],
+  "meta": {
+    "nodesInfo": [
+      {
+        "id": "90bccf7f-9197-4e25-a098-edf35e2aec0d",
+        "position": "1775,131.8"
+      },
+      {
+        "id": "3cfdc2dc-7032-4376-86cd-ce8125ca27ad",
+        "position": "1375,369.3"
+      },
+      {
+        "id": "c48aa83b-b42b-42a7-a080-9b6553b38255",
+        "position": "1575,369.3"
+      },
+      {
+        "id": "97585a3b-92b6-433c-81fa-e88def7637cc",
+        "position": "1775,369.3"
+      },
+      {
+        "id": "dd1cb609-79ec-4496-8272-9fbe9fadcda5",
+        "position": "2062.5,369.3"
+      }
+    ],
+    "editorObjects": [],
+    "canvasSize": "3840,2545.10000000001",
+    "gridPadding": "0,6.79999999999983"
+  },
+  "parameters": [],
+  "locals": {
+    "shoot_pos": "return nil",
+    "cover_pos": "return nil",
+    "enemy": "return nil"
+  }
+}

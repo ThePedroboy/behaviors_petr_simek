@@ -1,15 +1,31 @@
 {
   "name": "behaviors_petr_simek",
   "trees": [
+    "individuals\\change_stance_pos.bt",
     "individuals\\fire_at_nearest.bt",
     "individuals\\go_to_location.bt",
     "individuals\\kill_minotaurus.bt",
     "individuals\\kill_mino_bonus.bt",
     "individuals\\safe_move.bt",
+    "individuals\\safe_move_testing.bt",
+    "individuals\\shoot_from_cover.bt",
+    "individuals\\shoot_from_cover_testing.bt",
+    "individuals\\stance_crouch.bt",
     "individuals\\stance_prone.bt",
+    "individuals\\stance_stand.bt",
+    "individuals\\stealth_move_ind.bt",
+    "team\\follower.bt",
+    "team\\group_behaviour.bt",
+    "team\\point_man.bt",
+    "team\\stealth_group.bt",
+    "team\\wait_forever.bt",
     "behavior_pedro.bt"
   ],
-  "initScripts": [],
+  "initScripts": [
+    "Team_Pedro\\Ind_Pedro.class.lua",
+    "Team_Pedro\\Team_Pedro.class.lua",
+    "classes.lua"
+  ],
   "parameters": {},
   "capabilities": {},
   "dynamicTargets": []

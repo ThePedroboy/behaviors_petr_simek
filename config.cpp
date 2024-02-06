@@ -84,8 +84,8 @@ class CfgAvailableBehaviors
 		
 		class RootBehaviors
 		{
-			group[] = {"behaviors_petr_simek", "behavior_pedro"};
-			entity[] = {"generic_behaviors_public", "genericRoot"};
+			group[] = {"ai_core_public", "genericRoot"};
+			entity[] = {"ai_core_public", "genericRoot"};
 		};
 		
 		class Parameters
@@ -93,7 +93,7 @@ class CfgAvailableBehaviors
 			class orderName
 			{
 				displayName = "orderName";
-				value = "occupy";
+				value = "Stealth";
 				type = "string";
 			}
 			class orderParameters

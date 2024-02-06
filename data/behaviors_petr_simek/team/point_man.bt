@@ -1,0 +1,292 @@
+{
+  "name": "<unnamed>",
+  "id": "c87bb5f4-0443-48e6-a331-96026cba6951",
+  "type": "sequence",
+  "subtrees": [
+    {
+      "name": "Init",
+      "id": "f3272dea-6d90-4066-886f-af86319835cb",
+      "type": "scriptAction",
+      "script": [
+        "loc.target_pos = arg.orderData.position",
+        "loc.spotted_enemies = InternalTable()",
+        "loc.my_threats = {{avoidance = 3}}"
+      ]
+    },
+    {
+      "name": "Assign followers",
+      "id": "989ca402-38cc-474b-a9ea-d8e81def973e",
+      "type": "scriptAction",
+      "script": [
+        "local my_group = self:GetParentGroup()",
+        "local last_entity = self",
+        "local soldiers = {}",
+        "",
+        "for i = 0, my_group:GetEntityCount() - 1",
+        "do",
+        "    local curr_entity = my_group:GetEntity(i)",
+        "    if curr_entity ~= self and curr_entity:IsAlive() then",
+        "        -- assign follower behaviour",
+        "        self:SendMessage(",
+        "            curr_entity, ",
+        "            \"NewOrder\", ",
+        "            {",
+        "                orderName = \"Follower\",",
+        "                target = last_entity,",
+        "            }",
+        "        )",
+        "        last_entity = curr_entity",
+        "    end",
+        "end"
+      ]
+    },
+    {
+      "name": "Stand",
+      "id": "e3595164-1c3c-4d28-8c35-578008c225ae",
+      "type": "setStance",
+      "stance": [
+        "return Stance.Standing"
+      ]
+    },
+    {
+      "name": "<unnamed>",
+      "id": "d1d20933-2282-4a47-8343-1c7241f1636a",
+      "type": "supervisedParallel",
+      "subtrees": [
+        {
+          "name": "<unnamed>",
+          "id": "127bd1e6-a239-4934-9645-0170286b30ac",
+          "type": "selector",
+          "subtrees": [
+            {
+              "name": "<unnamed>",
+              "id": "6f5ccbf0-fa1d-4974-a126-219abc38c48b",
+              "type": "sequence",
+              "subtrees": [
+                {
+                  "name": "SetPathArgs",
+                  "id": "f312f027-6809-4abf-8782-cd9b622eacc9",
+                  "type": "scriptAction",
+                  "script": [
+                    "loc.path_args = {",
+                    "    threats = loc.my_threats",
+                    "}",
+                    "--loc.new_threats_set = 1",
+                    "--DebugLog(\"New threats set!\")"
+                  ]
+                },
+                {
+                  "name": "<unnamed>",
+                  "id": "fe8d7fef-d90e-4b34-ab97-67c5ffb83054",
+                  "type": "reference",
+                  "target": [
+                    "behaviors_petr_simek",
+                    "safe_move"
+                  ],
+                  "arguments": {
+                    "target_pos": "return loc.target_pos",
+                    "segment_len": "return 0",
+                    "path_args": "return loc.path_args"
+                  }
+                }
+              ],
+              "decorators": [
+                {
+                  "id": "af6cd168-746d-499f-94a7-aea05689354a",
+                  "type": "scriptCondition",
+                  "name": "Can go",
+                  "script": [
+                    "return loc.can_go == 1"
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Wait Forever",
+              "id": "03f053f0-2b78-4cf8-8efd-7fa1f63514b7",
+              "type": "waitForever"
+            }
+          ],
+          "active": true
+        },
+        {
+          "name": "<unnamed>",
+          "id": "2368bf51-71f7-41c3-8411-930965d1299a",
+          "type": "sequence",
+          "subtrees": [
+            {
+              "name": "Enemy spotted ?",
+              "id": "a0ce3156-9314-426f-95c9-b78a09d0b495",
+              "type": "scriptAction",
+              "script": [
+                "if self:CanSeeEnemy() then ",
+                "    local vis_enemies = self:GetVisibleEnemies()",
+                "    for i=1, #vis_enemies do",
+                "        local curent_enemy = vis_enemies[i]",
+                "",
+                "        if loc.spotted_enemies[curent_enemy] == nil then    -- nema tady byt == misto ~= ? hledame case, kdy tam jeste nebyl",
+                "            -- this visible enemy has not yet been spotted -> spot him and add him to enemies",
+                "            DebugLog(\"New enemy spotted!\")",
+                "            loc.spotted_enemies[curent_enemy] = true",
+                "            loc.can_go = 0",
+                "            --return true",
+                "        end",
+                "    end",
+                "end",
+                "",
+                "--return false"
+              ]
+            },
+            {
+              "name": "Wait 0.1",
+              "id": "8b8ccd63-e1fa-48b5-8ef9-5b8c48788466",
+              "type": "wait",
+              "time": [
+                "0.1"
+              ]
+            },
+            {
+              "name": "<unnamed>",
+              "id": "e0cbe55a-85dc-4775-91cd-b9ee8d00c01c",
+              "type": "sequence",
+              "subtrees": [
+                {
+                  "name": "Recalculate all threats",
+                  "id": "ebc8c6d9-5a52-43ff-982e-2fd8c6d84fa3",
+                  "type": "scriptAction",
+                  "script": [
+                    "-- clear threats table",
+                    "local new_threats = {{avoidance = 3}}",
+                    "",
+                    "DebugLog(\"Recalculating threats...\")",
+                    "",
+                    "-- go through the spotted enemies table",
+                    "for enemy, _ in pairs(loc.spotted_enemies) do",
+                    "    -- add threat for each enemy in table",
+                    "    local enemy_pos = enemy:GetPosition()",
+                    "    local new_threat = {area = Circle(enemy_pos, 50), avoidance = 5}",
+                    "    DebugLog(\"-- adding enemy\")",
+                    "    table.insert(new_threats, new_threat)",
+                    "end",
+                    "",
+                    "loc.my_threats = new_threats",
+                    "DebugLog(\"DONE\")"
+                  ]
+                },
+                {
+                  "name": "Set can go",
+                  "id": "756d4325-8d6e-457e-aec1-a2bcf37647c3",
+                  "type": "scriptAction",
+                  "script": [
+                    "loc.can_go = 1",
+                    "--loc.new_threats_set = 0"
+                  ]
+                }
+              ],
+              "decorators": [
+                {
+                  "id": "f81bc9a9-45fd-4d09-8da2-9aa18ffb8232",
+                  "type": "succeeder",
+                  "name": "Always Succeed"
+                },
+                {
+                  "id": "7842204c-c5a0-4246-bc8c-d5b6583d5786",
+                  "type": "scriptCondition",
+                  "name": "Can NOT go",
+                  "script": [
+                    "return loc.can_go == 0"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "nodesInfo": [
+      {
+        "id": "c87bb5f4-0443-48e6-a331-96026cba6951",
+        "position": "1862.24378954378,241.1"
+      },
+      {
+        "id": "f3272dea-6d90-4066-886f-af86319835cb",
+        "position": "1324.74378954378,416.1"
+      },
+      {
+        "id": "989ca402-38cc-474b-a9ea-d8e81def973e",
+        "position": "1512.24378954378,416.1"
+      },
+      {
+        "id": "e3595164-1c3c-4d28-8c35-578008c225ae",
+        "position": "1699.74378954378,416.1"
+      },
+      {
+        "id": "d1d20933-2282-4a47-8343-1c7241f1636a",
+        "position": "1862.24378954378,603.6"
+      },
+      {
+        "id": "127bd1e6-a239-4934-9645-0170286b30ac",
+        "position": "1562.24378954378,803.6"
+      },
+      {
+        "id": "6f5ccbf0-fa1d-4974-a126-219abc38c48b",
+        "position": "1399.74378954378,978.6"
+      },
+      {
+        "id": "f312f027-6809-4abf-8782-cd9b622eacc9",
+        "position": "1287.24378954378,1166.1"
+      },
+      {
+        "id": "fe8d7fef-d90e-4b34-ab97-67c5ffb83054",
+        "position": "1449.74378954378,1166.1"
+      },
+      {
+        "id": "03f053f0-2b78-4cf8-8efd-7fa1f63514b7",
+        "position": "1637.24378954378,978.6"
+      },
+      {
+        "id": "2368bf51-71f7-41c3-8411-930965d1299a",
+        "position": "2187.24378954378,803.6"
+      },
+      {
+        "id": "a0ce3156-9314-426f-95c9-b78a09d0b495",
+        "position": "2024.74378954378,1028.6"
+      },
+      {
+        "id": "8b8ccd63-e1fa-48b5-8ef9-5b8c48788466",
+        "position": "2199.74378954378,1028.6"
+      },
+      {
+        "id": "e0cbe55a-85dc-4775-91cd-b9ee8d00c01c",
+        "position": "2424.74378954378,928.6"
+      },
+      {
+        "id": "ebc8c6d9-5a52-43ff-982e-2fd8c6d84fa3",
+        "position": "2349.74378954378,1116.1"
+      },
+      {
+        "id": "756d4325-8d6e-457e-aec1-a2bcf37647c3",
+        "position": "2524.74378954378,1116.1"
+      }
+    ],
+    "editorObjects": [],
+    "canvasSize": "4114.74378954379,2553.6",
+    "gridPadding": "12.2437895437844,3.59999999999997"
+  },
+  "parameters": [
+    {
+      "name": "orderData",
+      "isOptional": false,
+      "defaultValue": ""
+    }
+  ],
+  "locals": {
+    "target_pos": "return nil",
+    "path_args": "return {}",
+    "spotted_enemies": "return nil",
+    "my_threats": "return {}",
+    "can_go": "return 1"
+  }
+}

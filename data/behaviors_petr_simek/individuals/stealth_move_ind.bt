@@ -1,0 +1,332 @@
+{
+  "name": "<unnamed>",
+  "id": "111d7203-ec0e-4971-8ffd-3e58bfd7bfe9",
+  "type": "supervisedParallel",
+  "subtrees": [
+    {
+      "name": "<unnamed>",
+      "id": "a79cfbf8-64d5-498a-b805-cf07d6ecc674",
+      "type": "selector",
+      "subtrees": [
+        {
+          "name": "<unnamed>",
+          "id": "f9b63932-7e44-4ee1-8b03-e2945aa17f34",
+          "type": "sequence",
+          "subtrees": [
+            {
+              "name": "Not ready to go",
+              "id": "97b0327d-0756-4d7f-bfac-4805a1825bfe",
+              "type": "scriptAction",
+              "script": [
+                "loc.ready_to_go = 0"
+              ]
+            },
+            {
+              "name": "<unnamed>",
+              "id": "cf2a00aa-7479-4fba-b4dd-558732543660",
+              "type": "wait",
+              "time": [
+                "5"
+              ]
+            },
+            {
+              "name": "Now ready",
+              "id": "123c1242-815d-4864-806b-e2ca80e440e3",
+              "type": "scriptAction",
+              "script": [
+                "loc.ready_to_go = 1"
+              ]
+            }
+          ],
+          "decorators": [
+            {
+              "id": "5e083f15-6468-48a3-ad86-1a7e80311bd3",
+              "type": "scriptCondition",
+              "name": "Enemy spotted ?",
+              "script": [
+                "return self:CanSeeEnemy()"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Succeed",
+          "id": "bca67071-e036-474c-86fa-443580e5d08a",
+          "type": "success"
+        }
+      ],
+      "decorators": [
+        {
+          "id": "34143d92-7857-42af-8ee9-b7dd58c827ef",
+          "type": "loopForever",
+          "name": "<unnamed>"
+        }
+      ],
+      "active": true
+    },
+    {
+      "name": "<unnamed>",
+      "id": "15c2b8d2-6e33-4251-b985-a84b5a4ffe5d",
+      "type": "sequence",
+      "subtrees": [
+        {
+          "name": "Set Target Pos",
+          "id": "6c6e187c-c4c7-462f-87d6-a320aae293e2",
+          "type": "scriptAction",
+          "script": [
+            "loc.target_pos = Vec3(999928.87, 1000078.5, 541.3)",
+            "",
+            "loc.my_threats = {{avoidance = 1}}"
+          ]
+        },
+        {
+          "name": "SetPathArgs",
+          "id": "1ede6838-b5aa-4da7-92b1-0cd5a9d2193a",
+          "type": "scriptAction",
+          "script": [
+            "",
+            "loc.path_args = {",
+            "    threats = loc.my_threats",
+            "}"
+          ]
+        },
+        {
+          "name": "<unnamed>",
+          "id": "d7992544-8f49-44d5-8e3a-62a7b52c1940",
+          "type": "reference",
+          "target": [
+            "behaviors_petr_simek",
+            "safe_move"
+          ],
+          "arguments": {
+            "target_pos": "return loc.target_pos",
+            "segment_len": "return 0",
+            "path_args": "return loc.path_args"
+          }
+        }
+      ],
+      "decorators": [
+        {
+          "id": "3d3e025f-4b1e-4905-9111-a3ee7a03779f",
+          "type": "scriptCondition",
+          "name": "Can go",
+          "script": [
+            "return loc.ready_to_go == 1"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "<unnamed>",
+      "id": "0ca3c89c-0aff-4d30-b5c3-f79149a97037",
+      "type": "sequence",
+      "subtrees": [
+        {
+          "name": "Add enemy to list",
+          "id": "1c60b5cc-aba8-4644-9aeb-6c352921821d",
+          "type": "scriptAction",
+          "script": [
+            "local function add_new_enemy(new_enemy)",
+            "    local enemy_pos = new_enemy:GetPosition()",
+            "    local new_threat = {area = Circle(enemy_pos, 50), avoidance = 3}",
+            "",
+            "    local curr_threats = loc.my_threats",
+            "    table.insert(curr_threats, new_threat)",
+            "    loc.my_threats = curr_threats",
+            "end",
+            "",
+            "",
+            "local current_enemies = loc.spotted_enemies",
+            "local new_enemies = self:GetVisibleEnemies()",
+            "",
+            "for i=1, #new_enemies do",
+            "    DebugLog(tostring(new_enemies[i]))",
+            "    if not table.indexOf(current_enemies, new_enemies[i]) then",
+            "        -- first time seeing this new enemy",
+            "        table.insert(current_enemies, new_enemies[i])",
+            "        add_new_enemy(new_enemies[i])",
+            "        break",
+            "    end",
+            "end",
+            "",
+            "loc.spotted_enemies = current_enemies"
+          ]
+        },
+        {
+          "name": "Now ready",
+          "id": "53a7a035-3fb5-4d13-a8bb-706bd31dfa27",
+          "type": "scriptAction",
+          "script": [
+            "loc.ready_to_go = 1"
+          ]
+        }
+      ],
+      "decorators": [
+        {
+          "id": "eb9fbe38-1a55-4331-8a36-28a8c8746b6c",
+          "type": "scriptCondition",
+          "name": "Can NOT go",
+          "script": [
+            "return loc.ready_to_go == 0"
+          ]
+        }
+      ]
+    }
+  ],
+  "unlinked-trees": [
+    {
+      "name": "<unnamed>",
+      "id": "86864f22-8d26-404a-aaac-6bb97d813d12",
+      "type": "reference",
+      "meta": {
+        "nodesInfo": [
+          {
+            "id": "86864f22-8d26-404a-aaac-6bb97d813d12",
+            "position": "862.5,822.901904761905"
+          }
+        ],
+        "editorObjects": []
+      },
+      "target": [
+        "behaviors_petr_simek",
+        "stance_prone"
+      ],
+      "arguments": {}
+    },
+    {
+      "name": "Update args",
+      "id": "f6c1e263-7be8-46b3-8e70-d5270f142f2e",
+      "type": "scriptAction",
+      "meta": {
+        "nodesInfo": [
+          {
+            "id": "f6c1e263-7be8-46b3-8e70-d5270f142f2e",
+            "position": "2087.5,335.401904761905"
+          }
+        ],
+        "editorObjects": []
+      },
+      "script": [
+        "local current_enemies = loc.spotted_enemies",
+        "local to_exclude = {}",
+        "",
+        "--[[",
+        "for _, value in ipairs(current_enemies) do",
+        "    Circle(",
+        "end",
+        "]]--",
+        "",
+        "--[[",
+        "loc.path_query = FindPath(my_pos, target_pos,",
+        "{",
+        "    --movementRestrictions = MovementRestrictions.StayOnRoad,",
+        "    threats = {{avoidance = 3} }",
+        "    boundaries = {",
+        "        include = {},",
+        "        exclude = {OrientedRectangle(avoid_point, loc.dimension/2, loc.dimension/2, 0)}",
+        "    }",
+        "})",
+        "]]--"
+      ]
+    },
+    {
+      "name": "Add Threats",
+      "id": "9d98d6d2-f9ca-475f-9dca-8191c3eb466d",
+      "type": "scriptAction",
+      "meta": {
+        "nodesInfo": [
+          {
+            "id": "9d98d6d2-f9ca-475f-9dca-8191c3eb466d",
+            "position": "2087.5,260.401904761905"
+          }
+        ],
+        "editorObjects": []
+      },
+      "script": [
+        "local middle_pos = (loc.target_pos + self:GetPosition()) / 2",
+        "",
+        "local new_threat1 = {area = Circle(middle_pos, 20), avoidance = 3}",
+        "local new_threat2 = {area = Circle(middle_pos, 20), avoidance = 3}",
+        "",
+        "--local curr_threats = loc.my_threats",
+        "",
+        "table.insert(loc.my_threats, new_threat1)",
+        "table.insert(loc.my_threats, new_threat2)",
+        "",
+        "--loc.my_threats = curr_threats"
+      ]
+    }
+  ],
+  "meta": {
+    "nodesInfo": [
+      {
+        "id": "111d7203-ec0e-4971-8ffd-3e58bfd7bfe9",
+        "position": "1500,247.901904761905"
+      },
+      {
+        "id": "a79cfbf8-64d5-498a-b805-cf07d6ecc674",
+        "position": "1087.5,485.401904761905"
+      },
+      {
+        "id": "f9b63932-7e44-4ee1-8b03-e2945aa17f34",
+        "position": "987.5,635.401904761905"
+      },
+      {
+        "id": "97b0327d-0756-4d7f-bfac-4805a1825bfe",
+        "position": "687.5,835.401904761905"
+      },
+      {
+        "id": "cf2a00aa-7479-4fba-b4dd-558732543660",
+        "position": "1050,835.401904761905"
+      },
+      {
+        "id": "123c1242-815d-4864-806b-e2ca80e440e3",
+        "position": "1225,835.401904761905"
+      },
+      {
+        "id": "bca67071-e036-474c-86fa-443580e5d08a",
+        "position": "1250,685.401904761905"
+      },
+      {
+        "id": "15c2b8d2-6e33-4251-b985-a84b5a4ffe5d",
+        "position": "1675,460.401904761905"
+      },
+      {
+        "id": "6c6e187c-c4c7-462f-87d6-a320aae293e2",
+        "position": "1487.5,635.401904761905"
+      },
+      {
+        "id": "1ede6838-b5aa-4da7-92b1-0cd5a9d2193a",
+        "position": "1675,635.401904761905"
+      },
+      {
+        "id": "d7992544-8f49-44d5-8e3a-62a7b52c1940",
+        "position": "1862.5,635.401904761905"
+      },
+      {
+        "id": "0ca3c89c-0aff-4d30-b5c3-f79149a97037",
+        "position": "2187.5,460.401904761905"
+      },
+      {
+        "id": "1c60b5cc-aba8-4644-9aeb-6c352921821d",
+        "position": "2112.5,647.901904761905"
+      },
+      {
+        "id": "53a7a035-3fb5-4d13-a8bb-706bd31dfa27",
+        "position": "2287.5,647.901904761905"
+      }
+    ],
+    "editorObjects": [],
+    "canvasSize": "3840,2874.50190476191",
+    "gridPadding": "0,10.4019047619046"
+  },
+  "parameters": [],
+  "locals": {
+    "target_pos": "return nil",
+    "path_args": "return {}",
+    "spotted_enemies": "return {}",
+    "ready_to_go": "return 1",
+    "my_threats": "return {}",
+    "thinking": "return 0"
+  }
+}

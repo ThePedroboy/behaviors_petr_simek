@@ -1,0 +1,126 @@
+{
+  "name": "<unnamed>",
+  "id": "7995e0e7-6fb1-4005-a0d9-129b00d45b08",
+  "type": "sequence",
+  "subtrees": [
+    {
+      "name": "Send Messages Prone",
+      "id": "124a31f9-ae84-483c-9410-e977ba3dbc3b",
+      "type": "scriptAction",
+      "script": [
+        "for i = 0, self:GetEntityCount() - 1",
+        "do ",
+        "    self:SendMessage(",
+        "        self:GetEntity(i), ",
+        "        \"NewOrder\", ",
+        "        {",
+        "            orderName = \"Prone\"",
+        "        }",
+        "    )",
+        "end"
+      ]
+    },
+    {
+      "name": "<unnamed>",
+      "id": "7cc2f880-7ef0-4c0e-bf9b-fabfff60eb88",
+      "type": "wait",
+      "time": [
+        "3"
+      ]
+    },
+    {
+      "name": "Send Messages Crouch",
+      "id": "e22a9a8f-79bb-4d53-9a13-388f9ce5160f",
+      "type": "scriptAction",
+      "script": [
+        "for i = 0, self:GetEntityCount() - 1",
+        "do ",
+        "    self:SendMessage(",
+        "        self:GetEntity(i), ",
+        "        \"NewOrder\", ",
+        "        {",
+        "            orderName = \"Crouch\"",
+        "        }",
+        "    )",
+        "end"
+      ]
+    },
+    {
+      "name": "<unnamed>",
+      "id": "b6bda1c1-8d5f-459c-9266-e354fe9f95fc",
+      "type": "wait",
+      "time": [
+        "3"
+      ]
+    },
+    {
+      "name": "Send Messages Stand",
+      "id": "dfc37f18-8106-41a1-91ab-c746c797d4ab",
+      "type": "scriptAction",
+      "script": [
+        "for i = 0, self:GetEntityCount() - 1",
+        "do ",
+        "    self:SendMessage(",
+        "        self:GetEntity(i), ",
+        "        \"NewOrder\", ",
+        "        {",
+        "            orderName = \"Stand\"",
+        "        }",
+        "    )",
+        "end"
+      ]
+    },
+    {
+      "name": "<unnamed>",
+      "id": "117e21b3-bcc2-44d6-b363-cb16e13af337",
+      "type": "wait",
+      "time": [
+        "3"
+      ]
+    }
+  ],
+  "decorators": [
+    {
+      "id": "3e6b9c8c-d30a-4ee3-beb9-c81daf1043de",
+      "type": "loopForever",
+      "name": "<unnamed>"
+    }
+  ],
+  "meta": {
+    "nodesInfo": [
+      {
+        "id": "7995e0e7-6fb1-4005-a0d9-129b00d45b08",
+        "position": "2050,633.831111111111"
+      },
+      {
+        "id": "124a31f9-ae84-483c-9410-e977ba3dbc3b",
+        "position": "1562.5,858.831111111111"
+      },
+      {
+        "id": "7cc2f880-7ef0-4c0e-bf9b-fabfff60eb88",
+        "position": "1762.5,858.831111111111"
+      },
+      {
+        "id": "e22a9a8f-79bb-4d53-9a13-388f9ce5160f",
+        "position": "1937.5,858.831111111111"
+      },
+      {
+        "id": "b6bda1c1-8d5f-459c-9266-e354fe9f95fc",
+        "position": "2125,858.831111111111"
+      },
+      {
+        "id": "dfc37f18-8106-41a1-91ab-c746c797d4ab",
+        "position": "2362.5,858.831111111111"
+      },
+      {
+        "id": "117e21b3-bcc2-44d6-b363-cb16e13af337",
+        "position": "2562.5,858.831111111111"
+      }
+    ],
+    "editorObjects": [],
+    "canvasSize": "3840,2933.83111111112",
+    "gridPadding": "0,8.83111111111117"
+  },
+  "parameters": [],
+  "locals": {}
+}

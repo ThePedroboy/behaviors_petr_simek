@@ -1,0 +1,55 @@
+{
+  "name": "<unnamed>",
+  "id": "e827800d-ad0e-4afb-8a48-a7a7df2c0df8",
+  "type": "sequence",
+  "subtrees": [
+    {
+      "name": "Set Target for follow",
+      "id": "e3a330c4-db51-490a-9d10-748423424958",
+      "type": "scriptAction",
+      "script": [
+        "loc.target_entity = arg.orderData.target"
+      ]
+    },
+    {
+      "name": "Follow Target",
+      "id": "d9d73971-9cc7-4e33-82e0-dbed3b79ea47",
+      "type": "followEntity",
+      "entity": [
+        "loc.target_entity"
+      ],
+      "distance": [
+        "3"
+      ]
+    }
+  ],
+  "meta": {
+    "nodesInfo": [
+      {
+        "id": "e827800d-ad0e-4afb-8a48-a7a7df2c0df8",
+        "position": "1850,266.3"
+      },
+      {
+        "id": "e3a330c4-db51-490a-9d10-748423424958",
+        "position": "1725,428.8"
+      },
+      {
+        "id": "d9d73971-9cc7-4e33-82e0-dbed3b79ea47",
+        "position": "1975,428.8"
+      }
+    ],
+    "editorObjects": [],
+    "canvasSize": "3840,2491.3",
+    "gridPadding": "0,7"
+  },
+  "parameters": [
+    {
+      "name": "orderData",
+      "isOptional": false,
+      "defaultValue": ""
+    }
+  ],
+  "locals": {
+    "target_entity": "return nil"
+  }
+}

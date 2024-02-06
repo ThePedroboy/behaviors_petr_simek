@@ -14,7 +14,9 @@
           "type": "scriptAction",
           "script": [
             "loc.target_pos = arg.target_pos",
-            "loc.my_pos = self:GetPosition()"
+            "loc.my_pos = self:GetPosition()",
+            "local threats = arg.path_args.threats",
+            "self:SetThreats(threats)"
           ]
         },
         {
@@ -63,14 +65,6 @@
           ]
         },
         {
-          "name": "Wait",
-          "id": "e73a3315-06df-470b-bfcc-a165952f2857",
-          "type": "wait",
-          "time": [
-            "1"
-          ]
-        },
-        {
           "name": "increment",
           "id": "4646b0b4-b618-463b-b1c5-d7ad9637d665",
           "type": "scriptAction",
@@ -95,6 +89,42 @@
       "name": "MoveToTarget",
       "id": "ca5843b1-77bf-4b9f-a431-eeac0d85a25e",
       "type": "move",
+      "position": [
+        "return loc.path:PositionAlongPath(loc.path:Length())"
+      ]
+    }
+  ],
+  "unlinked-trees": [
+    {
+      "name": "Wait 1",
+      "id": "e73a3315-06df-470b-bfcc-a165952f2857",
+      "type": "wait",
+      "meta": {
+        "nodesInfo": [
+          {
+            "id": "e73a3315-06df-470b-bfcc-a165952f2857",
+            "position": "2820.808,1033.19333333333"
+          }
+        ],
+        "editorObjects": []
+      },
+      "time": [
+        "1"
+      ]
+    },
+    {
+      "name": "MoveToTarget",
+      "id": "572cf09e-6b49-456e-b403-502648170431",
+      "type": "move",
+      "meta": {
+        "nodesInfo": [
+          {
+            "id": "572cf09e-6b49-456e-b403-502648170431",
+            "position": "3320.808,995.693333333334"
+          }
+        ],
+        "editorObjects": []
+      },
       "position": [
         "return loc.target_pos"
       ]
@@ -129,10 +159,6 @@
       {
         "id": "b48c563f-8814-4887-89d2-d8854e1aacd1",
         "position": "2608.308,1033.19333333333"
-      },
-      {
-        "id": "e73a3315-06df-470b-bfcc-a165952f2857",
-        "position": "2820.808,1033.19333333333"
       },
       {
         "id": "4646b0b4-b618-463b-b1c5-d7ad9637d665",
