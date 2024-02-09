@@ -1,0 +1,54 @@
+{
+  "name": "<unnamed>",
+  "id": "7e14771f-e92d-470b-b7ec-8d40700d00ca",
+  "type": "sequence",
+  "subtrees": [
+    {
+      "name": "Init",
+      "id": "4e9d565e-d909-4615-b295-c68f67e37174",
+      "type": "scriptAction",
+      "script": [
+        "self:SetThreats(arg.threats)"
+      ]
+    },
+    {
+      "name": "Move",
+      "id": "72c838bc-5e8e-40c3-8977-fc8d4e4dce4d",
+      "type": "move",
+      "position": [
+        "return arg.target_pos"
+      ]
+    }
+  ],
+  "meta": {
+    "nodesInfo": [
+      {
+        "id": "7e14771f-e92d-470b-b7ec-8d40700d00ca",
+        "position": "1862.5,209.6"
+      },
+      {
+        "id": "4e9d565e-d909-4615-b295-c68f67e37174",
+        "position": "1750,359.6"
+      },
+      {
+        "id": "72c838bc-5e8e-40c3-8977-fc8d4e4dce4d",
+        "position": "1987.5,359.6"
+      }
+    ],
+    "editorObjects": [],
+    "canvasSize": "3840,2409.6",
+    "gridPadding": "0,9.60000000000002"
+  },
+  "parameters": [
+    {
+      "name": "threats",
+      "isOptional": true,
+      "defaultValue": "return {{avoidance = 3}}"
+    },
+    {
+      "name": "target_pos",
+      "isOptional": false
+    }
+  ],
+  "locals": {}
+}

@@ -111,23 +111,6 @@
       "time": [
         "1"
       ]
-    },
-    {
-      "name": "MoveToTarget",
-      "id": "572cf09e-6b49-456e-b403-502648170431",
-      "type": "move",
-      "meta": {
-        "nodesInfo": [
-          {
-            "id": "572cf09e-6b49-456e-b403-502648170431",
-            "position": "3320.808,995.693333333334"
-          }
-        ],
-        "editorObjects": []
-      },
-      "position": [
-        "return loc.target_pos"
-      ]
     }
   ],
   "meta": {

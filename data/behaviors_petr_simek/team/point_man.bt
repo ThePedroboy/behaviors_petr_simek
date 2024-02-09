@@ -59,37 +59,9 @@
           "type": "selector",
           "subtrees": [
             {
-              "name": "<unnamed>",
-              "id": "6f5ccbf0-fa1d-4974-a126-219abc38c48b",
-              "type": "sequence",
-              "subtrees": [
-                {
-                  "name": "SetPathArgs",
-                  "id": "f312f027-6809-4abf-8782-cd9b622eacc9",
-                  "type": "scriptAction",
-                  "script": [
-                    "loc.path_args = {",
-                    "    threats = loc.my_threats",
-                    "}",
-                    "--loc.new_threats_set = 1",
-                    "--DebugLog(\"New threats set!\")"
-                  ]
-                },
-                {
-                  "name": "<unnamed>",
-                  "id": "fe8d7fef-d90e-4b34-ab97-67c5ffb83054",
-                  "type": "reference",
-                  "target": [
-                    "behaviors_petr_simek",
-                    "safe_move"
-                  ],
-                  "arguments": {
-                    "target_pos": "return loc.target_pos",
-                    "segment_len": "return 0",
-                    "path_args": "return loc.path_args"
-                  }
-                }
-              ],
+              "name": "Safe Move",
+              "id": "203c73d6-bd84-41af-996b-f175b7b58134",
+              "type": "reference",
               "decorators": [
                 {
                   "id": "af6cd168-746d-499f-94a7-aea05689354a",
@@ -99,7 +71,15 @@
                     "return loc.can_go == 1"
                   ]
                 }
-              ]
+              ],
+              "target": [
+                "behaviors_petr_simek",
+                "safe_move_no_stop"
+              ],
+              "arguments": {
+                "threats": "return loc.my_threats",
+                "target_pos": "return loc.target_pos"
+              }
             },
             {
               "name": "Wait Forever",
@@ -124,17 +104,14 @@
                 "    for i=1, #vis_enemies do",
                 "        local curent_enemy = vis_enemies[i]",
                 "",
-                "        if loc.spotted_enemies[curent_enemy] == nil then    -- nema tady byt == misto ~= ? hledame case, kdy tam jeste nebyl",
+                "        if loc.spotted_enemies[curent_enemy] == nil then",
                 "            -- this visible enemy has not yet been spotted -> spot him and add him to enemies",
                 "            DebugLog(\"New enemy spotted!\")",
                 "            loc.spotted_enemies[curent_enemy] = true",
                 "            loc.can_go = 0",
-                "            --return true",
                 "        end",
                 "    end",
-                "end",
-                "",
-                "--return false"
+                "end"
               ]
             },
             {
@@ -178,8 +155,7 @@
                   "id": "756d4325-8d6e-457e-aec1-a2bcf37647c3",
                   "type": "scriptAction",
                   "script": [
-                    "loc.can_go = 1",
-                    "--loc.new_threats_set = 0"
+                    "loc.can_go = 1"
                   ]
                 }
               ],
@@ -231,16 +207,8 @@
         "position": "1562.24378954378,803.6"
       },
       {
-        "id": "6f5ccbf0-fa1d-4974-a126-219abc38c48b",
-        "position": "1399.74378954378,978.6"
-      },
-      {
-        "id": "f312f027-6809-4abf-8782-cd9b622eacc9",
-        "position": "1287.24378954378,1166.1"
-      },
-      {
-        "id": "fe8d7fef-d90e-4b34-ab97-67c5ffb83054",
-        "position": "1449.74378954378,1166.1"
+        "id": "203c73d6-bd84-41af-996b-f175b7b58134",
+        "position": "1374.74378954378,978.6"
       },
       {
         "id": "03f053f0-2b78-4cf8-8efd-7fa1f63514b7",
